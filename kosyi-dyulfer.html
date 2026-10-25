@@ -165,8 +165,9 @@ aside li{display:flex;align-items:center;gap:9px}
       <g id="garda" class="fade" opacity="0">
         <circle cx="128" cy="404" r="5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1.2"/>
       </g>
-      <g id="shtyky" class="fade" opacity="0" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1">
-        <circle cx="140" cy="416" r="3.5"/><circle cx="148" cy="420" r="3.5"/>
+      <g id="shtyky" class="fade" opacity="0" fill="none">
+        <path d="M131 406 C134 400 137 396 140 392.4" stroke="var(--rope)" stroke-width="3" stroke-linecap="round"/>
+        <g stroke="var(--rope)" stroke-width="3"><ellipse cx="141" cy="391.4" rx="2.6" ry="5.5" transform="rotate(147.9 141 391.4)"/><ellipse cx="152" cy="384.5" rx="2.6" ry="5.5" transform="rotate(147.9 152 384.5)"/></g>
       </g>
       <g id="coilA" class="mv" fill="none" stroke="var(--rope)" stroke-width="2.6">
         <ellipse rx="15" ry="5"/><ellipse cy="-4" rx="13" ry="4.5"/><ellipse cy="-8" rx="11" ry="4"/>
@@ -180,8 +181,8 @@ aside li{display:flex;align-items:center;gap:9px}
         <circle cx="6" cy="2" r="3.5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1"/>
       </g>
       <g id="device" class="mv"><circle r="4.5" fill="var(--metal)" stroke="var(--lanyard)" stroke-width="1.5"/></g>
-      <g id="lanyards"></g>
       <g id="people"></g>
+      <g id="lanyards"></g>
       <g id="notes" class="note"></g>
     </svg>
   </div>
@@ -246,7 +247,7 @@ const K = 1.3; // figure scale
 const P = (x, o = {}) => ({x, y: gy(x), m: (x > 270 && x < 640) ? "c" : "s", ...o});
 const TOPA = [666, 62], TOP8 = [668, 70], BASE = [121, 404], BASE2 = [121, 412], EDGE = [642, 104], EDGE2 = [642, 98];
 const lineY = x => TOPA[1] + (TOPA[0] - x) * (BASE[1] - TOPA[1]) / (TOPA[0] - BASE[0]);
-const H = x => ({x, y: lineY(x) + 18, m:"h"}); // hanging under the tensioned rope on a short lanyard
+const H = x => ({x, y: lineY(x) + 44, m:"h"}); // hanging under the tensioned rope on a short lanyard
 const harness = p => p.m === "c" ? [p.x + 5 * K, p.y - 16 * K] : p.m === "h" ? [p.x, p.y] : [p.x, p.y - 18 * K];
 const chest = p => p.m === "c" ? [p.x + 9 * K, p.y - 24 * K] : [p.x + 2 * K, p.y - 26 * K];
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -259,6 +260,20 @@ const padFront = pts => { while (pts.length < N) pts.unshift(pts[0]); return pts
 const padBack = pts => { while (pts.length < N) pts.push(pts[pts.length - 1]); return pts; };
 const COIL = {aTop:[725, 112], bTop:[775, 112], aBot:[190, 432], bBot:[222, 432]};
 const nooseAt = x => [x, gy(x) - 5];
+// rope A along its laid line (tree → bottom); used while the pull drags it over the tree
+const LAID_A = [TOPA, EDGE, ...XS.map(x => [x, gy(x) - 4]), [270, 426], [170, 428]];
+const CUM = LAID_A.reduce((a, p, i) => (a.push(i ? a[i - 1] + Math.hypot(p[0] - LAID_A[i - 1][0], p[1] - LAID_A[i - 1][1]) : 0), a), []);
+const LEN_A = CUM[CUM.length - 1], LANE = 8;
+const along = d => {
+  d = Math.min(Math.max(d, 0), LEN_A);
+  let i = 1; while (CUM[i] < d) i++;
+  const t = (d - CUM[i - 1]) / (CUM[i] - CUM[i - 1]), [a, b] = [LAID_A[i - 1], LAID_A[i]];
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+};
+const strand = (from, to) => [along(from), ...LAID_A.filter((p, i) => CUM[i] < from && CUM[i] > to).reverse(), along(to)]; // vertices between two distances, tree-side last
+const nooseXY = s => { const p = along(s.drag); return [p[0], p[1] + LANE]; };
+const NA = 3 * N; // rope A gets more points while it runs over the tree
+const padTo = (pts, n) => { while (pts.length < n) pts.push(pts[pts.length - 1]); return pts; };
 
 function ropeA(s){
   const a = s.a;
@@ -270,7 +285,12 @@ function ropeA(s){
     return [...pts, [165, 428]];
   }
   if (a === "slack") return [TOPA, EDGE, ...XS.map(x => [x, gy(x) - 4]), [270, 426], [170, 428]];
-  if (a === "pulling") return padFront([nooseAt(s.noose), ...XS.filter(x => x < s.noose).map(x => [x, gy(x) - 4]), [270, 426], [170, 428]]);
+  if (a === "drag"){
+    // noose → up to the tree (lower lane) → down to the rising lower end
+    const up = strand(s.drag, 0).map(([x, y], i, arr) => i === arr.length - 1 ? [x, y] : [x, y + LANE]);
+    const down = strand(LEN_A - s.drag, 0).reverse().slice(1);
+    return [...up, ...down];
+  }
   return fill(COIL.aBot);
 }
 function descB(h){
@@ -294,7 +314,7 @@ function ropeB(s){
   if (b === "based") return [dev4(), EDGE2, ...laid, [270, 420], BASE2];
   if (b === "pull") return [TOP8, EDGE2, ...laid, [270, 420], BASE2];
   if (b === "desc") return descB(harness(s.pos[s.who[0]]));
-  if (b === "pulling") return padFront([nooseAt(s.noose), ...laid.filter(p => p[0] < s.noose), [270, 420], [200, 414]]);
+  if (b === "pulling"){ const k = nooseXY(s); return padFront([k, ...laid.filter(p => p[0] < k[0]), [270, 420], [200, 414]]); }
   return fill(COIL.bBot);
 }
 
@@ -336,7 +356,7 @@ const STEPS = [
     pos:A({1:B[1]}), a:"tight", b:"pull", top:"noose", base:1, cars:1, garda:1,
     notes:[{x:460, y:220, t:"натягнута мотузка"}, {x:128, y:380, t:"гарда"}] },
   { t:"Два штики: «Два штики!»", who:[1], say:{1:"Два штики!"},
-    d:"Після натягу №1 фіксує гарду двома штиками й подає команду «Два штики!». Тепер можна спускатися решті.",
+    d:"Після натягу №1 фіксує гарду двома штиками: вільним кінцем від карабінів в'яже їх навколо натягнутої мотузки. Потім подає команду «Два штики!». Тепер можна спускатися решті.",
     pos:A({1:B[1]}), a:"tight", b:"pull", top:"noose", base:1, cars:1, garda:1, shtyky:1,
     notes:[{x:128, y:380, t:"гарда + два штики"}] },
   { t:"№2 спускається косим дюльфером", who:[2], dev:2,
@@ -358,9 +378,12 @@ const STEPS = [
     d:"Коли останній спустився, гарду розштиковують і розбирають. Усі вісімки й вузли на тій частині мотузки, що піде через карабінну удавку, розв'язують.",
     pos:A(B), a:"slack", b:"pull", top:"noose", base:1, cars:1,
     safety:"Через карабінну удавку має йти пряма мотузка без жодного вузла — інакше вона заклинить нагорі." },
-  { t:"Тягнемо за здьорг", who:[1,2,3,4], noose:470,
-    d:"Усі тягнуть за мотузку зі здьоргом. Удавка звільняє дерево і разом із мотузкою їде вниз.",
-    pos:A(B), a:"pulling", b:"pulling", top:"none", base:1, cars:1 },
+  { t:"Тягнемо за здьорг: удавка злітає з дерева", who:[1,2,3,4], drag:90,
+    d:"Усі тягнуть за мотузку зі здьоргом — вона тягне за собою карабінну удавку. Удавка зсувається з дерева, а друга мотузка не падає: вони з'єднані. Здьорг іде вниз, а нижній кінець другої мотузки починає підніматися до дерева.",
+    pos:A(B), a:"drag", b:"pulling", top:"none", base:1, cars:1 },
+  { t:"Мотузка протягується через дерево", who:[1,2,3,4], drag:330,
+    d:"Здьорг далі тягнеться вниз, а друга мотузка — через перегин дерева: її нижній кінець іде вгору до дерева, переходить на інший бік і спускається вслід за удавкою.",
+    pos:A(B), a:"drag", b:"pulling", top:"none", base:1, cars:1 },
   { t:"Відчепити й збухтувати", who:[1,2,3,4],
     d:"Мотузки вибрано. Зайве відчіплюють, базу розбирають, мотузки бухтують. Готово.",
     pos:A(B), a:"gone", b:"gone", top:"none",
@@ -407,7 +430,8 @@ for (const id in ROLES){
     <g class="pose hang">${HANG.replaceAll("COLOR", c)}</g></g>
     <g class="badge" transform="translate(0,-70)"><circle r="9" fill="${c}"/><text text-anchor="middle" dy="4" font-size="11" font-weight="700" fill="#fff" font-family="Golos Text,sans-serif">${id}</text></g>`;
   personEls[id] = {g, stand:g.querySelector(".stand"), climb:g.querySelector(".climb"), hang:g.querySelector(".hang"),
-    badge:g.querySelector(".badge"), lan:el("path", {class:"lan"}, lanG)};
+    badge:g.querySelector(".badge"), lan:el("path", {class:"lan"}, lanG),
+    clip:el("ellipse", {class:"mv", rx:2.6, ry:4.6, fill:"none", stroke:"var(--metal)", "stroke-width":2.2}, lanG)};
 }
 
 const toD = pts => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L");
@@ -441,12 +465,12 @@ function bubble(parent, x, y, t){
 function render(){
   const s = STEPS[cur];
   const ap = ropeA(s), bp = ropeB(s);
-  setD($("rope"), toD(ap));
+  setD($("rope"), toD(padTo([...ap], NA)));
   setD($("pull"), toD(bp));
   place($("knot"), ap[N - 1], s.knot);
   place($("coilA"), s.a === "coil" ? COIL.aTop : COIL.aBot, s.a === "coil" || s.a === "gone");
   place($("coilB"), ["pulling", "gone"].includes(s.b) ? COIL.bBot : COIL.bTop, ["coil", "pulling", "gone"].includes(s.b));
-  place($("noose"), s.a === "pulling" ? nooseAt(s.noose) : s.a === "gone" ? [182, 422] : TOPA, s.top === "noose" || s.a === "pulling" || s.a === "gone");
+  place($("noose"), s.a === "drag" ? nooseXY(s) : s.a === "gone" ? [182, 422] : TOPA, s.top === "noose" || s.a === "drag" || s.a === "gone");
   if (s.dev) place($("device"), harness(s.pos[s.dev]), true); else $("device").style.opacity = 0;
   $("topFixed").style.opacity = s.top === "fixed" ? 1 : 0;
   $("wrap").style.opacity = s.top === "noose" ? 1 : 0;
@@ -464,8 +488,10 @@ function render(){
     e.badge.setAttribute("transform", p.m === "h" ? "translate(0,-50)" : "translate(0,-70)");
     e.g.classList.toggle("active", s.who.includes(+id));
     const h = harness(p), on = s.sb && s.sb[id];
-    setD(e.lan, toD([h, on ? [p.x + 3, lineY(p.x + 3)] : h]));
+    const cp = [p.x + 16, lineY(p.x + 16) + 3];
+    setD(e.lan, toD([h, on ? cp : h]));
     e.lan.style.opacity = on ? 1 : 0;
+    place(e.clip, cp, on);
   }
 
   const notes = $("notes"); notes.innerHTML = "";

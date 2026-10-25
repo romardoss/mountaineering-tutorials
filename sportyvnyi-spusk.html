@@ -13,7 +13,7 @@
   --sky1:#bcd7e6; --sky2:#e9f0ec; --hill:#a7bfae; --hill2:#c3d3c3;
   --rock:#8b7b67; --strata:#6f614f; --grass:#6b8d4b;
   --trunk:#5a4535; --leaf:#3e6a3a; --leaf2:#4f7f45;
-  --rope:#e4521b; --pull:#0f9bb8; --prusik:#7a4fd0; --lanyard:#2b2f2c; --metal:#9aa3a8;
+  --rope:#e4521b; --pull:#0f9bb8; --rope-hl:#b3121f; --prusik:#7a4fd0; --lanyard:#2b2f2c; --metal:#9aa3a8;
   --p1:#d42f6a; --p2:#2d6bd3; --p3:#d99a00; --p4:#23966a;
   --skin:#f0c9a5; --body:#2c3330;
   --accent:#e4521b; --safety-bg:#fff1e3; --safety-line:#f0a36b;
@@ -25,7 +25,7 @@
     --sky1:#1a2a36; --sky2:#26343a; --hill:#2c3f3a; --hill2:#33463f;
     --rock:#5a4e41; --strata:#463c31; --grass:#4c6a38;
     --trunk:#7a604b; --leaf:#3a6436; --leaf2:#4a7a42;
-    --rope:#ff6a30; --pull:#3cc6e0; --prusik:#a585f0; --lanyard:#d8dcd6; --metal:#b8c0c4;
+    --rope:#ff6a30; --pull:#3cc6e0; --rope-hl:#ff2e45; --prusik:#a585f0; --lanyard:#d8dcd6; --metal:#b8c0c4;
     --p1:#ff5c8f; --p2:#5b93ff; --p3:#f2b62a; --p4:#3cc28c;
     --skin:#e7bf9a; --body:#dfe4df;
     --accent:#ff6a30; --safety-bg:#33241a; --safety-line:#a0562b;
@@ -37,12 +37,13 @@
   --sky1:#1a2a36; --sky2:#26343a; --hill:#2c3f3a; --hill2:#33463f;
   --rock:#5a4e41; --strata:#463c31; --grass:#4c6a38;
   --trunk:#7a604b; --leaf:#3a6436; --leaf2:#4a7a42;
-  --rope:#ff6a30; --pull:#3cc6e0; --prusik:#a585f0; --lanyard:#d8dcd6; --metal:#b8c0c4;
+  --rope:#ff6a30; --pull:#3cc6e0; --rope-hl:#ff2e45; --prusik:#a585f0; --lanyard:#d8dcd6; --metal:#b8c0c4;
   --p1:#ff5c8f; --p2:#5b93ff; --p3:#f2b62a; --p4:#3cc28c;
   --skin:#e7bf9a; --body:#dfe4df;
   --accent:#ff6a30; --safety-bg:#33241a; --safety-line:#a0562b;
   --bubble:#232b28; --halo:rgba(255,106,48,.32);
 }
+html{--pullc:var(--pull)}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:16px/1.55 "Golos Text",system-ui,sans-serif}
@@ -111,13 +112,17 @@ aside li{display:flex;align-items:center;gap:9px}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition:none!important;animation:none!important}
 }
-.pullline{fill:none;stroke:var(--pull);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:d .9s cubic-bezier(.45,.05,.3,1)}
+.pullline{fill:none;stroke:var(--pullc);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:d .9s cubic-bezier(.45,.05,.3,1)}
 .inset text{font:600 12.5px "Golos Text",sans-serif;fill:var(--ink)}
 .inset .ititle{font:500 13px Unbounded,sans-serif}
 .dock{position:sticky;bottom:0;z-index:5;margin:28px -16px 0;padding:10px 16px 12px;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-top:1px solid var(--line)}
 .dock .controls{margin:0 0 8px}
 .dock .rail{margin:0}
 .scene + .info{margin-top:20px}
+.variants{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.variants button{padding:7px 14px;font-size:14px}
+[data-var][aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--panel));color:var(--ink)}
+.vnote{color:var(--muted);font-size:14px;max-width:78ch;margin:0 0 14px}
 .credit{font-size:14px;color:var(--muted)}
 .credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .credit a:hover{color:var(--accent)}
@@ -126,7 +131,13 @@ aside li{display:flex;align-items:center;gap:9px}
 <body>
 <div class="wrap">
   <h1>Спортивний спуск схилом</h1>
-  <p class="lead">Група з чотирьох спускається по перилах на прусику. Передостанній протягує мотузку для здьоргу, останній перебудовує базу на карабінну удавку. Спуск — лише в рукавичках. Перемикайте кроки кнопками, кліком по шкалі або клавішами <kbd>←</kbd> <kbd>→</kbd>.</p>
+  <p class="lead" id="lead">Група з чотирьох спускається по перилах на прусику. Передостанній протягує мотузку для здьоргу, останній перебудовує базу на карабінну удавку. Спуск — лише в рукавичках. Перемикайте кроки кнопками, кліком по шкалі або клавішами <kbd>←</kbd> <kbd>→</kbd>.</p>
+  <div class="variants" role="group" aria-label="Варіація спуску">
+    <button data-var="classic">Класична · дві мотузки</button>
+    <button data-var="mid-down">Одна мотузка · середина внизу</button>
+    <button data-var="mid-top">Одна мотузка · середина на дереві</button>
+  </div>
+  <p class="vnote" id="vnote"></p>
 
   <div class="scene">
     <svg id="svg" viewBox="0 -40 1000 600" role="img" aria-label="Схема спуску групи схилом">
@@ -150,17 +161,19 @@ aside li{display:flex;align-items:center;gap:9px}
         <ellipse cx="800" cy="74" rx="2.6" ry="4.2" fill="none" stroke="var(--metal)" stroke-width="2"/>
       </g>
       <ellipse id="wrap" class="fade" cx="794" cy="76" rx="9" ry="3.5" fill="none" stroke="var(--rope)" stroke-width="3" opacity="0"/>
+      <path id="drape" class="fade" d="M800 74 C808 75 808 81 800 82" fill="none" stroke="var(--rope)" stroke-width="3" opacity="0"/>
       <path id="pull" class="pullline"/>
       <path id="rope" class="ropeline"/>
       <g id="coilR" class="mv" fill="none" stroke="var(--rope)" stroke-width="2.6">
         <ellipse cy="0" rx="15" ry="5"/><ellipse cy="-4" rx="13" ry="4.5"/><ellipse cy="-8" rx="11" ry="4"/>
       </g>
-      <g id="coilP" class="mv" fill="none" stroke="var(--pull)" stroke-width="2.6">
+      <g id="coilP" class="mv" fill="none" stroke="var(--pullc)" stroke-width="2.6">
         <ellipse cy="0" rx="15" ry="5"/><ellipse cy="-4" rx="13" ry="4.5"/><ellipse cy="-8" rx="11" ry="4"/>
       </g>
       <g id="knot" class="mv"><circle r="5.5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1.5"/></g>
       <g id="noose" class="mv">
         <circle cx="6" cy="-4" r="3.5" fill="none" stroke="var(--rope)" stroke-width="2"/>
+        <circle id="eight2" cx="-5" cy="-3" r="3.5" fill="none" stroke="var(--rope)" stroke-width="2" opacity="0"/>
         <image href="assets/carabiner.png" x="-13" y="-13" width="26" height="26" transform="rotate(35)"/>
       </g>
       <g id="lanyards"></g>
@@ -169,22 +182,43 @@ aside li{display:flex;align-items:center;gap:9px}
       <g id="inset" class="fade inset" opacity="0">
         <rect x="16" y="-30" width="340" height="256" rx="12" fill="var(--panel)" stroke="var(--line)"/>
         <text class="ititle" x="32" y="-8">Карабінна удавка зблизька</text>
-        <text x="32" y="12" fill="var(--muted)">здьорг — у вісімку перил, а не в карабін</text>
+        <text id="insetSub" x="32" y="12" fill="var(--muted)">здьорг — у вісімку перил, а не в карабін</text>
         <g transform="translate(0 20)">
           <path d="M66 84 C76 72 96 70 120 70 C150 70 184 66 205 69" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round" opacity=".55"/>
           <rect x="104" y="26" width="32" height="170" rx="4" fill="var(--trunk)"/>
           <path d="M338 190 L178 107 C150 118 96 117 70 105 C57 98 58 90 66 84" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
           <circle cx="204" cy="80" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
           <circle cx="212" cy="69" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
-          <path d="M303 84 L338 103" fill="none" stroke="var(--pull)" stroke-width="4.5" stroke-linecap="round"/>
-          <circle cx="288" cy="76" r="6.5" fill="none" stroke="var(--pull)" stroke-width="4"/>
-          <circle cx="297" cy="81" r="6.5" fill="none" stroke="var(--pull)" stroke-width="4"/>
+          <path d="M303 84 L338 103" fill="none" stroke="var(--pullc)" stroke-width="4.5" stroke-linecap="round"/>
+          <circle cx="288" cy="76" r="6.5" fill="none" stroke="var(--pullc)" stroke-width="4"/>
+          <circle cx="297" cy="81" r="6.5" fill="none" stroke="var(--pullc)" stroke-width="4"/>
           <image href="assets/carabiner.png" x="165" y="65" width="62" height="62" transform="rotate(215 196 96)"/>
           <image href="assets/carabiner.png" x="234" y="51" width="62" height="62" transform="rotate(255 265 82)"/>
-          <path d="M240 82 L222 82" fill="none" stroke="var(--pull)" stroke-width="3" stroke-linecap="round"/>
-          <path d="M213 82 L223 76.5 L223 87.5Z" fill="var(--pull)"/>
+          <path d="M240 82 L222 82" fill="none" stroke="var(--pullc)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M213 82 L223 76.5 L223 87.5Z" fill="var(--pullc)"/>
           <text x="298" y="124">здьорг</text>
           <text x="250" y="176">перила</text>
+          <text x="32" y="186">дерево</text>
+        </g>
+      </g>
+      <g id="inset2" class="fade inset" opacity="0">
+        <rect x="16" y="-30" width="340" height="256" rx="12" fill="var(--panel)" stroke="var(--line)"/>
+        <text class="ititle" x="32" y="-8">Петля з двох вісімок зблизька</text>
+        <text x="32" y="12" fill="var(--muted)">середина мотузки — за деревом</text>
+        <g transform="translate(0 20)">
+          <path d="M205 70 C180 66 150 66 120 66 C92 66 70 72 64 84" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+          <rect x="104" y="26" width="32" height="170" rx="4" fill="var(--trunk)"/>
+          <path d="M64 84 C58 100 82 112 120 112 C160 112 186 110 205 106" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M216 66 C250 68 300 108 338 134" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M216 110 C250 118 300 158 338 186" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="212" cy="70" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
+          <circle cx="224" cy="75" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
+          <circle cx="212" cy="106" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
+          <circle cx="224" cy="101" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
+          <image href="assets/carabiner.png" x="195" y="57" width="62" height="62" transform="rotate(180 226 88)"/>
+          <text x="236" y="46">дві вісімки</text>
+          <text x="250" y="94">карабін</text>
+          <text x="262" y="200">кінці — вниз</text>
           <text x="32" y="186">дерево</text>
         </g>
       </g>
@@ -208,11 +242,11 @@ aside li{display:flex;align-items:center;gap:9px}
       <ol id="legendPeople"></ol>
       <h3>Лінії</h3>
       <ol>
-        <li><span class="sw" style="border-color:var(--rope)"></span>Перильна мотузка</li>
-        <li><span class="sw" style="border-color:var(--pull)"></span>Мотузка для здьоргу</li>
+        <li><span class="sw" style="border-color:var(--rope)"></span><span id="lgRail">Перильна мотузка</span></li>
+        <li><span class="sw" style="border-color:var(--pullc)"></span><span id="lgPull">Мотузка для здьоргу</span></li>
         <li><span class="sw" style="border-color:var(--lanyard);border-top-width:2px"></span>Вус самостраховки</li>
         <li><span class="sw" style="border-color:var(--prusik)"></span>Прусик</li>
-        <li><span class="dot" style="background:var(--rope);width:12px;height:12px"></span>Вузол на кінці перил</li>
+        <li><span class="dot" style="background:var(--rope);width:12px;height:12px"></span><span id="lgKnot">Вузол на кінці перил</span></li>
       </ol>
     </aside>
   </div>
@@ -253,6 +287,7 @@ const TXS = [625, 600, 575, 550, 525, 500, 470, 440, 410];
 const STRAIGHT = [ANCH.top, EDGE, ...XS.map(x => [x, SY(x) - 6]), [185, 494]];
 const TANGLED = [ANCH.top, EDGE, ...TXS.map((x, i) => i % 2 ? [x - 10, SY(x) - 16] : [x, SY(x) - 6]), [395, SY(395) - 5]];
 const PULL = [ANCH2, EDGE2, ...XS.map(x => [x, SY(x) - 1]), [250, 499], [150, 497]];
+const PULL2 = [ANCH2, EDGE2, ...XS.map(x => [x, SY(x) - 1]), [200, 497], [185, 494]]; // second strand of a single doubled rope: ends where the first one ends
 const COIL = {railTop:[690, 96], pullTop:[718, 98], railBot:[165, 498], pullBot:[200, 498], nooseBot:[182, 488]};
 const fill = (n, p) => Array.from({length:n}, () => p);
 const padFront = (pts, n) => { while (pts.length < n) pts.unshift(pts[0]); return pts; };
@@ -268,7 +303,7 @@ const along = d => {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 };
 const LANE = 9; // second strand of the rail rope lies slightly below the first
-const nooseXY = s => { if (s.drag == null) return nooseAt(s.noose); const p = along(s.drag); return [p[0], p[1] + (s.drag ? LANE : 0)]; };
+const nooseXY = s => { if (s.drag == null) return nooseAt(s.noose); const p = along(s.drag); return [p[0], p[1] + (s.rail === "drag" && s.drag ? LANE : 0)]; };
 
 // --- positions
 const T = {1:P(748, {sb:"top"}), 2:P(825, {sb:"top"}), 3:P(853, {sb:"top"}), 4:P(881, {sb:"top"})};
@@ -276,10 +311,12 @@ const B = {1:P(55), 2:P(90), 3:P(125), 4:P(225)};
 const A = (...p) => Object.assign({}, T, ...p);
 const GLOVES = "Спуск — тільки в рукавичках. Руки контролюють прусик.";
 
-// rail: "coil" | "tangled" | x (straightened down to x) | "straight" | "noose" | "drag" | "gone"
+// rail: "coil" | "tangled" | x (straightened down to x) | "straight" | "noose" | "drag" | "over" | "gone"
+// over: single rope slides over the tree, its first end s.u from the bottom has risen up the slope
 // drag: distance the noose has been pulled away from the tree; the rail rope runs bottom → tree → noose
-// pull: "coil" | "trail" (dragged by №3) | "laid" | "noose" | "gone"
-const STEPS = [
+// pull: "coil" | "trail" (dragged by №3) | "laid" | "laid2" (ends at the rail end) | "noose" | "gone"
+// one: the two lines are strands of one rope, so they share the rope colour
+const CLASSIC = [
   { t:"База з жорсткою точкою кріплення", who:[1],
     d:"На дереві нагорі роблять базу й жорстко кріплять до неї перильну мотузку: вісімкою з карабіном у базу або окремим вузлом (булінь, штик). Поруч у базу одним кінцем встібають мотузку для здьоргу — поки вона в бухті. Усі стоять на самостраховці.",
     pos:A(), rail:"coil", pull:"coil", base:"fixed", knot:1,
@@ -338,6 +375,126 @@ const STEPS = [
     notes:[{x:182, y:530, t:"дві бухти", c:"onrock"}] },
 ];
 
+// --- variations: one doubled rope instead of rail + separate pull rope
+const from = (i, o) => ({...CLASSIC[i], ...o});
+const DOWN = {rail:"straight", pull:"laid2", base:"fixed", knot:1, one:1};
+const TIED = {pull:"laid2", rail:"straight", knot:1, one:1};
+
+// середина внизу: два кінці нагорі в базі, з одного кінця потім робиться удавка, другий — для здьоргу
+const MID_DOWN = [
+  { t:"Мотузку складають навпіл, середину — у вузол", who:[1],
+    d:"Мотузку складають удвічі й зав'язують вузол на середині. Нагорі лишаються два кінці.",
+    pos:A(), rail:"coil", pull:"coil", base:"fixed", knot:0, one:1,
+    notes:[{x:704, y:132, t:"середина з вузлом", c:"onrock"}] },
+  { t:"Середину скидають униз, кінці — у базу", who:[1],
+    d:"Середину з вузлом скидають по схилу вниз. Обидва кінці лишаються нагорі й стібаються в базу на дереві. Кожна нитка має діставати до низу, тому спуск удвічі коротший за довжину мотузки.",
+    pos:A(), ...DOWN,
+    notes:[{x:185, y:530, t:"вузол на середині", c:"onrock"}] },
+  from(2, {t:"№1 спускається по здвоєних перилах",
+    d:"№1, стоячи на самостраховці, нав'язує прусик навколо обох ниток і встібає його в грудну обв'язку. Лише після цього вистібається з самостраховки — відтепер його страхує прусик. Потім спускається, дорогою розправляючи мотузку вниз. Поки №1 спускається, №2 уже може нав'язувати свій прусик, але не встібається в нього.",
+    pos:A({1:P(450, {pr:1})}), ...DOWN,
+    tip:CLASSIC[2].tip + " У цій варіації краще, щоб усі спускалися по здвоєній мотузці." }),
+  from(3, {...DOWN}),
+  from(4, {d:"№2 встібає в обидві нитки прусик, який нав'язав заздалегідь, і спускається.", ...DOWN}),
+  from(5, {...DOWN}),
+  { t:"№3 спускається", who:[3],
+    d:"№3 так само спускається по здвоєних перилах: прусик навколо обох ниток.",
+    pos:A({1:B[1], 2:B[2], 3:P(430, {pr:1})}), ...DOWN, safety:GLOVES },
+  { t:"№3 унизу: «Вільно!»", who:[3, 4], say:{3:"Вільно!"},
+    d:"№3 відстібає прусик, відходить убік і подає «Вільно!».",
+    pos:A({1:B[1], 2:B[2], 3:B[3]}), ...DOWN },
+  from(8, {t:"№4 робить карабінну удавку з одного кінця",
+    d:"№4 з одного кінця мотузки робить карабінну удавку навколо дерева: вісімка на кінці, карабін стібається у вісімку й у ту саму мотузку. Другий кінець — для здьоргу: на ньому теж вісімка, яку стібають у вісімку удавки, а не в її карабін. Так під час здьоргування нічого не заклинить.",
+    ...TIED, base:"noose", one:0 }),
+  from(9, {d:"№4 забирає інші елементи бази й спускається по здвоєних перилах: прусик навколо обох ниток. Нагорі лишається тільки удавка.", ...TIED, base:"noose", one:0 }),
+  from(10, {t:"№4 унизу показує кінець для здьоргу", say:{4:"Тягнемо за цей!"},
+    d:"Спустившись, №4 обов'язково показує всім, за який кінець тягнути: той, що з вісімкою для здьоргу. Тут мотузка одна, тож тягнуть саме за кінець, а не за окрему мотузку.",
+    ...TIED, base:"noose", one:0 }),
+  from(11, {t:"Розв'язати вузол на середині",
+    d:"Вузол на середині мотузки внизу обов'язково розв'язують: інакше він не пройде через карабінну удавку. Після цього мотузка — одна лінія: від удавки вниз і назад до кінця для здьоргу.",
+    ...TIED, base:"noose", knot:0, one:0 }),
+  { t:"Вибираємо кінець для здьоргу: удавка злітає з дерева", who:[1, 2, 3, 4], drag:90,
+    d:"Усі вибирають кінець для здьоргу — він тягне за собою карабінну удавку. Удавка зсувається з дерева, а мотузка не падає: обидва кінці лишаються з'єднані карабіном. Кінець для здьоргу йде на фінішний берег, а низ перильної нитки починає підніматись до дерева.",
+    pos:A(B), rail:"drag", pull:"noose", base:"none", knot:0, one:0 },
+  { t:"Перильна нитка протягується через дерево", who:[1, 2, 3, 4], drag:300,
+    d:"Кінець для здьоргу далі тягнеться на фінішний берег, а перильна нитка — через перегин дерева: її низ іде вгору до дерева, переходить на стартовий бік і спускається вслід за удавкою.",
+    pos:A(B), rail:"drag", pull:"noose", base:"none", knot:0, one:0 },
+  from(14, {t:"Удавка внизу — бухтуємо",
+    d:"Карабінна удавка приїхала. Розстібають карабіни, розв'язують вісімки й бухтують мотузку. Нагорі нічого не лишилось.",
+    one:1, notes:[{x:182, y:530, t:"одна бухта", c:"onrock"}] }),
+];
+
+// середина нагорі: мотузка перекинута за дерево, кінці скинуті вниз
+const MID_TOP = [
+  { t:"Мотузку перекидають навколо дерева", who:[1],
+    d:"Мотузку перекидають навколо дерева так, щоб її середина була за деревом. Обидві нитки — з одного боку, кінці лишаються в руках.",
+    pos:A(), rail:"coil", pull:"coil", base:"draped", knot:0, one:1 },
+  { t:"Дві вісімки й карабін — це база", who:[1], inset:2,
+    d:"На обох нитках біля дерева зав'язують по вісімці й стібають їх одним карабіном. Виходить замкнена петля навколо дерева — вона й відіграє роль бази.",
+    pos:A(), rail:"coil", pull:"coil", base:"loop", knot:0, one:1 },
+  { t:"Кінці скидають униз", who:[1],
+    d:"Обидва кінці скидають по схилу. Мотузка здвоєна, тож кожна нитка має діставати до низу: спуск удвічі коротший за довжину мотузки.",
+    pos:A(), rail:"straight", pull:"laid", base:"loop", knot:0, one:1 },
+  from(2, {t:"№1 спускається по одній нитці",
+    d:"№1, стоячи на самостраховці, нав'язує прусик на одну з ниток і встібає його в грудну обв'язку. Лише після цього вистібається з самостраховки — відтепер його страхує прусик. Потім спускається, дорогою розправляючи мотузку вниз. Поки №1 спускається, №2 уже може нав'язувати свій прусик, але не встібається в нього.",
+    pos:A({1:P(450, {pr:1})}), rail:"straight", pull:"laid", base:"loop", knot:0, one:1,
+    tip:CLASSIC[2].tip + " Усі, крім останнього, спускаються по одній нитці." }),
+  from(3, {rail:"straight", pull:"laid", base:"loop", knot:0, one:1}),
+  from(4, {d:"№2 встібає прусик, нав'язаний заздалегідь на одну нитку, і спускається.", rail:"straight", pull:"laid", base:"loop", knot:0, one:1}),
+  from(5, {rail:"straight", pull:"laid", base:"loop", knot:0, one:1}),
+  { t:"№3 спускається", who:[3],
+    d:"№3 спускається по одній нитці на прусику.",
+    pos:A({1:B[1], 2:B[2], 3:P(430, {pr:1})}), rail:"straight", pull:"laid", base:"loop", knot:0, one:1, safety:GLOVES },
+  { t:"№3 унизу: «Вільно!»", who:[3, 4], say:{3:"Вільно!"},
+    d:"№3 відстібає прусик, відходить убік і подає «Вільно!».",
+    pos:A({1:B[1], 2:B[2], 3:B[3]}), rail:"straight", pull:"laid", base:"loop", knot:0, one:1 },
+  { t:"Внизу зв'язують два кінці між собою", who:[1, 2, 3],
+    d:"Поки №4 ще нагорі, внизу два кінці мотузки зв'язують між собою звичайним вузлом. Це потрібно для спуску останнього учасника по здвоєних перилах.",
+    pos:A({1:B[1], 2:B[2], 3:B[3]}), rail:"straight", pull:"laid2", base:"loop", knot:1, one:1,
+    notes:[{x:185, y:530, t:"кінці зв'язані", c:"onrock"}],
+    safety:"Два нижні кінці мають бути зв'язані між собою: інакше спуск останнього по здвоєних перилах небезпечний. Підійде звичайний вузол." },
+  { t:"№4 розв'язує вісімки й забирає карабін", who:[4],
+    d:"Тепер №4 нагорі розв'язує обидві вісімки й забирає карабін. Мотузка просто перекинута навколо дерева й нічим не закріплена.",
+    pos:A({1:B[1], 2:B[2], 3:B[3]}), rail:"straight", pull:"laid2", base:"draped", knot:1, one:1,
+    safety:"Без бази мотузка нічим не закріплена, тому №4 спускається лише по обох нитках одразу." },
+  { t:"№4 спускається по здвоєних перилах", who:[4],
+    d:"№4 заряджає в спусковий пристрій обидві нитки й нав'язує схоплюючий вузол навколо двох ниток. Усі інші спускалися по одній нитці, а він — по здвоєних.",
+    pos:A({1:B[1], 2:B[2], 3:B[3], 4:P(470, {pr:1})}), rail:"straight", pull:"laid2", base:"draped", knot:1, one:1,
+    safety:"Обидві нитки — у спусковий пристрій, схоплюючий — навколо обох. Якщо навантажити лише одну нитку, мотузка проїде через дерево і №4 впаде. " + GLOVES },
+  { t:"№4 унизу: розв'язуємо кінці", who:[4], say:{4:"Тягнемо за цей!"},
+    d:"Унизу розв'язують вузол між двома кінцями — мотузка знову має два вільні кінці. №4 показує, за який кінець тягнути.",
+    pos:A(B), rail:"straight", pull:"laid", base:"draped", knot:0, one:0,
+    notes:[{x:185, y:530, t:"вузол розв'язано", c:"onrock"}] },
+  { t:"Тягнемо за один кінець", who:[1, 2, 3, 4], u:250,
+    d:"Усі тягнуть за один кінець. Мотузка ковзає через дерево: її другий кінець іде вгору по схилу до дерева.",
+    pos:A(B), rail:"over", pull:"laid", base:"draped", knot:0, one:0 },
+  { t:"Мотузка протягується через дерево", who:[1, 2, 3, 4], u:600,
+    d:"Другий кінець доходить до дерева, переходить на стартовий бік і спускається вниз. Карабінної удавки не потрібно: мотузка просто перекинута навколо дерева.",
+    pos:A(B), rail:"over", pull:"laid", base:"draped", knot:0, one:0 },
+  { t:"Мотузка внизу — бухтуємо", who:[1, 2, 3, 4],
+    d:"Мотузка зісковзнула з дерева. Нагорі нічого не лишилось — залишилось її збухтувати.",
+    pos:A(B), rail:"gone", pull:"gone", base:"none", knot:0, one:1, mark:0,
+    notes:[{x:182, y:530, t:"одна бухта", c:"onrock"}] },
+];
+
+const VARIANTS = {
+  "classic": {steps:CLASSIC,
+    lead:"Група з чотирьох спускається по перилах на прусику. Передостанній протягує мотузку для здьоргу, останній перебудовує базу на карабінну удавку.",
+    note:"Перильна мотузка й окрема мотузка для здьоргу. Довжина спуску дорівнює довжині перильної мотузки.",
+    names:{}, sub:"здьорг — у вісімку перил, а не в карабін",
+    legend:["Перильна мотузка", "Мотузка для здьоргу", "Вузол на кінці перил"]},
+  "mid-down": {steps:MID_DOWN,
+    lead:"Група з чотирьох спускається по здвоєній мотузці: середина з вузлом унизу, два кінці нагорі в базі.",
+    note:"Плюс — потрібна лише одна мотузка. Мінус — дистанція спуску скорочується вдвічі. Тут краще, щоб усі спускалися по здвоєній мотузці. Здьорг — за кінець, а не за окрему мотузку.",
+    names:{3:"№3 — передостанній", 4:"№4 — останній, робить карабінну удавку"}, sub:"кінець для здьоргу — у вісімку, а не в карабін",
+    legend:["Мотузка (здвоєна)", "Кінець для здьоргу", "Вузол на середині мотузки"]},
+  "mid-top": {steps:MID_TOP,
+    lead:"Група з чотирьох спускається по мотузці, перекинутій серединою за дерево: кінці скинуто вниз.",
+    note:"Плюс — потрібна лише одна мотузка. Мінус — дистанція спуску скорочується вдвічі. Усі, крім останнього, спускаються по одній нитці; останній — по обох, а нижні кінці мають бути зв'язані між собою.",
+    names:{1:"№1 — спускається першим", 3:"№3 — передостанній", 4:"№4 — останній, спускається по здвоєних"}, sub:"",
+    legend:["Мотузка (здвоєна)", "Кінець, за який тягнуть", "Вузол між двома кінцями"]},
+};
+
 // --- static world
 const el = (tag, attrs = {}, parent) => {
   const e = document.createElementNS(NS, tag);
@@ -387,6 +544,7 @@ function railPts(s){
     const d = s.drag, lane = p => [p[0], p[1] + LANE];
     return padFront([nooseXY(s), lane(along(Math.min(d, EDGE_LEN))), along(0), along(Math.min(EDGE_LEN, RAIL_LEN - d)), along(RAIL_LEN - d)], n);
   }
+  if (r === "over") return padBack([along(0), along(Math.min(EDGE_LEN, RAIL_LEN - s.u)), along(RAIL_LEN - s.u)], n);
   if (r === "noose"){ const k = nooseAt(s.noose); return padFront([k, ...STRAIGHT.filter((p, i) => i >= 2 && p[0] < k[0])], n); }
   // straightened down to x = r, still tangled below
   return padBack([...STRAIGHT.filter((p, i) => i < 2 || p[0] >= r), ...TANGLED.filter((p, i) => i >= 2 && p[0] < r - 5)], n);
@@ -395,6 +553,7 @@ function pullPts(s){
   const r = s.pull, n = PULL.length;
   if (r === "coil") return [ANCH2, ...fill(n - 1, COIL.pullTop)];
   if (r === "laid") return PULL;
+  if (r === "laid2") return PULL2;
   if (r === "gone") return fill(n, COIL.pullBot);
   if (r === "noose"){ const k = nooseXY(s); return padFront([k, ...PULL.filter((p, i) => i >= 2 && p[0] < k[0])], n); }
   const h = harness(s.pos[3]); // trail: dragged by №3's lanyard
@@ -413,18 +572,33 @@ const setD = (e, d) => { e.setAttribute("d", d); e.style.d = `path("${d}")`; };
 const place = (e, [x, y], on) => { e.style.transform = `translate(${x}px, ${y}px)`; e.style.opacity = on ? 1 : 0; };
 
 // --- UI
-let cur = 0;
-try { const v = +localStorage.getItem("sport-spusk-step"); if (v >= 0 && v < STEPS.length) cur = v; } catch (e) {}
 const $ = id => document.getElementById(id);
 const rail = $("rail");
-STEPS.forEach((s, i) => {
-  const btn = document.createElement("button");
-  btn.textContent = i + 1; btn.title = s.t;
-  btn.onclick = () => go(i);
-  rail.appendChild(btn);
-});
-$("legendPeople").innerHTML = Object.entries(ROLES).map(([id, r]) =>
-  `<li><span class="dot" style="background:${r.color}">${id}</span>${r.name}</li>`).join("");
+let variant = "classic", STEPS = CLASSIC, cur = 0;
+const roleName = id => VARIANTS[variant].names[id] || ROLES[id].name;
+
+function setVariant(v, step = 0){
+  variant = v; STEPS = VARIANTS[v].steps; cur = Math.max(0, Math.min(STEPS.length - 1, step));
+  const V = VARIANTS[v];
+  rail.innerHTML = "";
+  STEPS.forEach((s, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1; btn.title = s.t;
+    btn.onclick = () => go(i);
+    rail.appendChild(btn);
+  });
+  document.querySelectorAll("[data-var]").forEach(b => b.setAttribute("aria-pressed", b.dataset.var === v));
+  $("lead").textContent = V.lead + " Спуск — лише в рукавичках. Перемикайте кроки кнопками, кліком по шкалі або клавішами ← →.";
+  $("vnote").textContent = V.note;
+  $("legendPeople").innerHTML = Object.entries(ROLES).map(([id, r]) =>
+    `<li><span class="dot" style="background:${r.color}">${id}</span>${roleName(id)}</li>`).join("");
+  ["lgRail", "lgPull", "lgKnot"].forEach((id, i) => $(id).textContent = V.legend[i]);
+  $("insetSub").textContent = V.sub;
+  // single rope: the pull end stays rope-coloured, only a deeper red marks it
+  document.documentElement.style.setProperty("--pullc", v === "classic" ? "var(--pull)" : "var(--rope-hl)");
+  render();
+}
+document.querySelectorAll("[data-var]").forEach(b => b.onclick = () => setVariant(b.dataset.var));
 
 function bubble(parent, x, y, t){
   const w = t.length * 8 + 22, bx = Math.min(Math.max(x - w / 2, 6), 994 - w);
@@ -442,13 +616,18 @@ function render(){
   setD($("rope"), toD(rp));
   setD($("pull"), toD(pp));
   const railOn = s.rail !== "coil" && s.rail !== "gone";
-  place($("knot"), rp[rp.length - 1], s.knot && railOn && !["noose", "drag"].includes(s.rail));
+  place($("knot"), rp[rp.length - 1], s.knot && railOn && !["noose", "drag", "over"].includes(s.rail));
   place($("coilR"), s.rail === "gone" ? COIL.railBot : COIL.railTop, !railOn);
-  place($("coilP"), ["noose", "gone"].includes(s.pull) ? COIL.pullBot : COIL.pullTop, s.pull !== "laid");
-  place($("noose"), ["noose", "drag"].includes(s.rail) ? nooseXY(s) : s.rail === "gone" ? COIL.nooseBot : ANCH.top, s.base === "noose" || ["noose", "drag", "gone"].includes(s.rail));
+  place($("coilP"), ["noose", "gone"].includes(s.pull) ? COIL.pullBot : COIL.pullTop, !["laid", "laid2"].includes(s.pull) && !(s.one && s.pull === "gone"));
+  $("pull").style.stroke = $("coilP").style.stroke = s.one ? "var(--rope)" : "";
+  place($("noose"), ["noose", "drag"].includes(s.rail) ? nooseXY(s) : s.rail === "gone" ? COIL.nooseBot : ANCH.top,
+    s.mark ?? (["noose", "loop"].includes(s.base) || ["noose", "drag", "gone"].includes(s.rail)));
+  $("eight2").style.opacity = s.base === "loop" ? 1 : 0;
   $("baseFixed").style.opacity = s.base === "fixed" ? 1 : 0;
-  $("wrap").style.opacity = s.base === "noose" ? 1 : 0;
-  $("inset").style.opacity = s.inset ? 1 : 0;
+  $("wrap").style.opacity = ["noose", "loop"].includes(s.base) ? 1 : 0;
+  $("drape").style.opacity = s.base === "draped" ? 1 : 0;
+  $("inset").style.opacity = s.inset === 1 ? 1 : 0;
+  $("inset2").style.opacity = s.inset === 2 ? 1 : 0;
 
   for (const id in personEls){
     const p = s.pos[id], e = personEls[id];
@@ -493,7 +672,7 @@ function render(){
     b.classList.toggle("done", i < cur);
     if (i === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
   });
-  try { localStorage.setItem("sport-spusk-step", cur); } catch (e) {}
+  try { localStorage.setItem("sport-spusk-step", cur); localStorage.setItem("sport-spusk-variant", variant); } catch (e) {}
 }
 function go(i){ cur = Math.max(0, Math.min(STEPS.length - 1, i)); render(); }
 $("prev").onclick = () => go(cur - 1);
@@ -504,7 +683,10 @@ document.addEventListener("keydown", e => {
   else if (e.key === "Home") go(0);
   else if (e.key === "End") go(STEPS.length - 1);
 });
-render();
+try {
+  const v = localStorage.getItem("sport-spusk-variant"), st = +localStorage.getItem("sport-spusk-step");
+  setVariant(VARIANTS[v] ? v : "classic", st >= 0 ? st : 0);
+} catch (e) { setVariant("classic"); }
 </script>
 </body>
 </html>

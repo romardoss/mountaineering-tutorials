@@ -93,6 +93,7 @@ h2{font-family:Unbounded,sans-serif;font-weight:500;font-size:clamp(19px,2.4vw,2
 .safety b{display:block;font-size:14px;margin-bottom:2px}
 .safety[hidden],.row[hidden],.fork[hidden]{display:none}
 .tip{border-left-color:var(--p2);background:color-mix(in srgb,var(--p2) 10%,var(--panel));margin-top:10px}
+.tip ol{margin:4px 0 0;padding-left:20px;display:grid;gap:4px}
 .fork{display:grid;gap:8px;margin-top:14px;max-width:62ch}
 .fork button{text-align:left}
 .branch{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted);font-size:14px}
@@ -135,12 +136,13 @@ aside li{display:flex;align-items:center;gap:9px}
 .credit{font-size:14px;color:var(--muted)}
 .credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .credit a:hover{color:var(--accent)}
+.cmp li.locked{opacity:.55}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Дюльфер</h1>
-  <p class="lead">Контрольований спуск по крутому схилу чи вертикалі через спусковий пристрій — вісімку, стакан або вузол УІА. Ліворуч — учасник на стіні, праворуч — система зблизька. Пристрій перемикається внизу.</p>
+  <p class="lead">Контрольований спуск по крутому схилу чи вертикалі через спусковий пристрій — вісімку або вузол УІАА. Ліворуч — учасник на стіні, праворуч — система зблизька. Пристрій перемикається внизу.</p>
 
   <div class="scene">
     <svg id="svg" viewBox="0 -50 1000 610" role="img" aria-label="Схема дюльфера">
@@ -172,52 +174,62 @@ aside li{display:flex;align-items:center;gap:9px}
         <rect x="552" y="16" width="432" height="528" rx="14" fill="var(--panel)" stroke="var(--line)"/>
         <text class="ztitle" x="572" y="48">Система зблизька</text>
         <text x="786" y="88">мотузка (перила)</text>
-        <path d="M770 64 L770 292" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
-        <path data-l="0" data-until="1" class="zp" d="M770 290 L770 530" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
+        <path d="M770 64 L770 266" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
+        <path data-l="0" data-until="1" class="zp" d="M770 264 L770 530" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
         <!-- harness -->
-        <path d="M584 404 Q650 446 704 436" fill="none" stroke="var(--p1)" stroke-width="12" stroke-linecap="round"/>
-        <ellipse cx="716" cy="432" rx="16" ry="9" fill="none" stroke="var(--p1)" stroke-width="6"/>
+        <ellipse cx="768" cy="456" rx="14" ry="28" fill="none" stroke="var(--p1)" stroke-width="6"/>
         <text x="572" y="476">кільце страхувальної</text><text x="572" y="494">системи</text>
 
         <!-- figure-8 -->
         <g data-l="2" data-dev="8" class="zp">
-          <ellipse cx="770" cy="318" rx="24" ry="30" fill="none" stroke="var(--metal)" stroke-width="9"/>
-          <ellipse cx="770" cy="374" rx="13" ry="15" fill="none" stroke="var(--metal)" stroke-width="8"/>
-          <path d="M770 290 L770 314 Q800 336 790 352 Q770 364 750 352 Q740 334 758 318 M792 340 C812 390 806 460 800 530" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
-          <text x="818" y="312">вісімка</text>
-        </g>
-        <!-- tube -->
-        <g data-l="2" data-dev="tube" class="zp">
-          <path d="M744 300 L796 300 L788 356 L752 356Z" fill="var(--metal)" stroke="var(--lanyard)" stroke-width="1.5"/>
-          <path d="M770 290 L765 304 L764 372 Q771 390 779 372 L779 304 Q800 290 806 334 C812 400 806 460 800 530" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-          <text x="818" y="312">стакан</text>
+          <image href="assets/belay_8.png" x="714" y="250" width="144" height="168"/>
+          <path d="M770 264 C748 266 728 290 726 322 C724 362 742 400 766 412 C786 420 792 400 786 380 C782 362 776 344 772 334 C800 328 814 380 806 440 C804 480 800 510 800 530" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
+          <text x="864" y="312">вісімка</text>
         </g>
         <!-- munter -->
         <g data-l="2" data-dev="munter" class="zp">
-          <image href="assets/carabiner.png" x="667" y="283" width="170" height="170" transform="rotate(-25 752 368)"/>
-          <path d="M770 290 L768 314 C802 312 802 336 774 338 C746 340 748 316 772 322 C800 330 798 352 786 362 C806 400 806 460 800 530" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
-          <text x="818" y="312">вузол УІА</text><text x="818" y="330">на карабіні</text>
+          <!-- Munter hitch traced over assets/raw/uiaa.png; drawn in the photo's coordinates, turned 180° so the hitch sits on top -->
+          <g transform="translate(770 392) rotate(180) scale(.3) translate(-282 -162)">
+            <path d="M290 300 C280 310 262 320 258 340" fill="none" stroke="var(--rope)" stroke-width="30" stroke-linecap="round"/><path d="M282 262 C284 280 292 300 300 320" fill="none" stroke="var(--rope)" stroke-width="30" stroke-linecap="round"/>
+            <image href="assets/carabiner.png" x="74" y="-46" width="416" height="416" transform="rotate(180 282 162)"/>
+            <path d="M258 340 C256 370 290 392 330 386 C370 380 392 330 380 290 C372 262 350 240 320 236 C300 234 284 246 282 262" fill="none" stroke="var(--panel)" stroke-width="44" stroke-linecap="round"/><path d="M258 340 C256 370 290 392 330 386 C370 380 392 330 380 290 C372 262 350 240 320 236 C300 234 284 246 282 262" fill="none" stroke="var(--rope)" stroke-width="30" stroke-linecap="round"/>
+            <path d="M100 180 C160 180 215 195 245 228 C265 250 278 275 290 300" fill="none" stroke="var(--panel)" stroke-width="44" stroke-linecap="round"/><path d="M100 180 C160 180 215 195 245 228 C265 250 278 275 290 300" fill="none" stroke="var(--rope)" stroke-width="30" stroke-linecap="round"/>
+            <path d="M300 320 C320 380 380 450 435 505" fill="none" stroke="var(--panel)" stroke-width="44" stroke-linecap="round"/><path d="M300 320 C320 380 380 450 435 505" fill="none" stroke="var(--rope)" stroke-width="30" stroke-linecap="round"/>
+          </g>
+          <path d="M729 297 C720 284 742 268 770 262" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
+          <path d="M816 386 C836 388 830 412 818 432 C806 452 803 490 800 530" fill="none" stroke="var(--rope)" stroke-width="9" stroke-linecap="round"/>
+          <text x="818" y="312">вузол УІАА</text><text x="818" y="330">на карабіні</text>
         </g>
-        <!-- carabiner to belay loop (for 8 and tube) -->
-        <g data-l="3" data-dev="8 tube" class="zp">
-          <image href="assets/carabiner.png" x="693" y="353" width="110" height="110" transform="rotate(40 748 408)"/>
+        <!-- carabiner to belay loop (for 8) -->
+        <g data-l="3" data-dev="8" class="zp">
+          <image href="assets/carabiner.png" x="715" y="363" width="110" height="110"/>
         </g>
         <g data-l="3" class="zp">
           <text x="572" y="352">карабін,</text><text x="572" y="370">муфту закручено</text>
         </g>
         <!-- prusik -->
-        <g data-l="4" class="zp">
-          <g fill="none" stroke="var(--prusik)" stroke-width="4"><ellipse cx="770" cy="232" rx="11" ry="4"/><ellipse cx="770" cy="244" rx="11" ry="4"/><ellipse cx="770" cy="256" rx="11" ry="4"/></g>
-          <path d="M762 262 C722 300 706 380 712 424" fill="none" stroke="var(--prusik)" stroke-width="4"/>
+        <g data-l="1" class="zp">
+          <g fill="none" stroke-linecap="round"><path d="M752 244 C734 262 714 284 690 296" stroke="var(--lanyard)" stroke-width="8"/><path d="M752 244 C734 262 714 284 690 296" stroke="var(--prusik)" stroke-width="6"/><path d="M752 244 C734 262 714 284 690 296" stroke="var(--lanyard)" stroke-width="1"/></g>
+          <g fill="none" stroke-linecap="round"><path d="M757 231 C749 238 749 250 757 257" stroke="var(--lanyard)" stroke-width="6.5"/><path d="M757 231 C749 238 749 250 757 257" stroke="var(--prusik)" stroke-width="4.2"/><path d="M756 232 C760 235.5 780 235.5 783 232 M756 240 C760 243.5 780 243.5 783 240 M756 248 C760 251.5 780 251.5 783 248 M756 256 C760 259.5 780 259.5 783 256 " stroke="var(--lanyard)" stroke-width="6.5"/><path d="M756 232 C760 235.5 780 235.5 783 232 M756 240 C760 243.5 780 243.5 783 240 M756 248 C760 251.5 780 251.5 783 248 M756 256 C760 259.5 780 259.5 783 256 " stroke="var(--prusik)" stroke-width="4.2"/></g>
           <text x="800" y="240">прусик</text><text x="800" y="258">вище пристрою</text>
+          <circle cx="686" cy="298" r="5" fill="var(--p1)"/><text x="676" y="290" text-anchor="end">верх системи</text>
         </g>
         <!-- hands in gloves -->
         <g id="hands" data-l="5" class="zp">
-          <rect x="752" y="176" width="36" height="28" rx="9" fill="var(--glove)"/>
-          <rect x="744" y="196" width="10" height="24" rx="5" fill="var(--glove)"/>
+          <rect x="746" y="172" width="22" height="36" rx="8" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="756" y="174" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="756" y="182" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="756" y="190" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="756" y="198" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="743" y="198" width="10" height="26" rx="5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
           <text x="800" y="180">ліва: кулак вище</text><text x="800" y="198">прусика, великий</text><text x="800" y="216">палець униз</text>
-          <rect x="784" y="452" width="34" height="28" rx="9" fill="var(--glove)"/>
-          <text x="830" y="464">права: контроль</text><text x="830" y="482">видачі</text>
+          <rect x="810" y="450" width="20" height="36" rx="8" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="790" y="452" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="790" y="460" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="790" y="468" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="790" y="476" width="32" height="9" rx="4.5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <rect x="786" y="432" width="10" height="26" rx="5" fill="var(--glove)" stroke="#00000059" stroke-width="1.3"/>
+          <text x="840" y="464">права: контроль</text><text x="840" y="482">видачі</text>
         </g>
         <g id="zmove" class="fade" opacity="0">
           <path d="M732 190 L732 226" stroke="var(--accent)" stroke-width="3.5" marker-end="url(#arr)"/>
@@ -237,13 +249,13 @@ aside li{display:flex;align-items:center;gap:9px}
       <h2 id="title"></h2>
       <p class="desc" id="desc"></p>
       <div class="safety" id="safety"><b>Безпека</b><span id="safetyText"></span></div>
+      <div class="safety tip" id="tip"><b>Як контролювати швидкість</b><ol id="tipList"></ol></div>
     </section>
     <aside>
       <h3>Пристрої</h3>
       <ol class="cmp" id="cmp">
         <li data-dev="8"><b>Вісімка</b><span>Крутить мотузку, але підходить до ширшого діапазону діаметрів мотузок.</span></li>
-        <li data-dev="tube"><b>Стакан</b><span>Крутить мотузку найменше. Товста, брудна чи заледеніла мотузка може в нього не пролізти.</span></li>
-        <li data-dev="munter"><b>Вузол УІА</b><span>Не потребує спускового пристрою — лише карабін. Дуже сильно крутить мотузку.</span></li>
+        <li data-dev="munter" class="locked"><b><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="display:inline-block;width:14px;height:14px;vertical-align:-2px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Вузол УІАА — ще перевіряється</b><span>Не потребує спускового пристрою — лише карабін. Дуже сильно крутить мотузку.</span></li>
       </ol>
     </aside>
   </div>
@@ -252,7 +264,7 @@ aside li{display:flex;align-items:center;gap:9px}
       <button id="prev">← Назад</button>
       <button id="next" class="primary">Далі →</button>
       <span class="dev" role="group" aria-label="Спусковий пристрій">Пристрій:
-        <button data-dev-btn="8">Вісімка</button><button data-dev-btn="tube">Стакан</button><button data-dev-btn="munter">УІА</button></span>
+        <button data-dev-btn="8">Вісімка</button><button data-dev-btn="munter" disabled title="Ще перевіряється — поки недоступно"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="display:inline-block;width:14px;height:14px;vertical-align:-2px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> УІАА</button></span>
       <span class="counter" id="counter"></span>
     </div>
     <nav class="rail" id="rail" aria-label="Кроки"></nav>
@@ -264,7 +276,7 @@ aside li{display:flex;align-items:center;gap:9px}
 const NS = "http://www.w3.org/2000/svg";
 const K = 1.5; // figure scale
 const ANCHOR = [414, 44], EDGE = [332, 60];
-const DEV_NAME = {"8":"вісімку", tube:"стакан", munter:"вузол УІА"};
+const DEV_NAME = {"8":"вісімку", munter:"вузол УІАА"};
 const GLOVES = "Увесь спуск — у страхувальних рукавицях.";
 
 // poses: origin = harness, wall is to the right
@@ -275,26 +287,26 @@ const POSES = {
 };
 const HEAD = {stand:[1,-25], rap:[-5,-25], hang:[-3,-25]};
 
-// rig: 0 rope only · 2 device · 3 carabiner to belay loop · 4 prusik · 5 hands
+// rig: 0 rope only · 1 prusik (self-belay first) · 2 device · 3 carabiner to belay loop · 5 hands
 const STEPS = [
   { t:"Нагорі біля перил", rig:0, pos:{x:372, y:30, pose:"stand"},
     d:"Учасник нагорі, перила закріплені. Дюльфер — той самий спуск, що й у спортивному спуску, але на крутішому схилі чи вертикалі замість простого прусика використовують спусковий пристрій: він контролює видачу мотузки." },
+  { t:"Самостраховка: прусик", rig:1, pos:{x:372, y:30, pose:"stand"},
+    d:"Якщо зверху учасника ніхто не страхує, потрібна самостраховка: першим ділом на мотузці нав'язує прусик і встібає його у верх страхувальної системи («у груди»). Лише після цього ставить спусковий пристрій — нижче прусика. Якщо інший учасник веде командну верхню страховку, самостраховка не потрібна.",
+    safety:"Без верхньої страховки — лише з прусиком над пристроєм." },
   { t:"Пристрій на мотузку", rig:2, pos:{x:372, y:30, pose:"stand"},
-    d:{"8":"Продягає мотузку через спусковий пристрій вісімку.",
-       tube:"Продягає петлю мотузки через спусковий пристрій стакан.",
-       munter:"Спускового пристрою не потрібно: на карабіні зав'язує вузол УІА."} },
+    d:{"8":"Нижче прусика продягає мотузку через спусковий пристрій вісімку.",
+       munter:"Спускового пристрою не потрібно: нижче прусика на карабіні зав'язує вузол УІАА."} },
   { t:"Карабін у кільце системи", rig:3, pos:{x:372, y:30, pose:"stand"},
     d:{"8":"Вісімку карабіном встібає в кільце страхувальної системи на поясі. Карабіни замуфтовує.",
-       tube:"Стакан разом з петлею мотузки встібає карабіном у кільце страхувальної системи на поясі. Карабіни замуфтовує.",
-       munter:"Карабін з вузлом УІА встібає в кільце страхувальної системи на поясі й замуфтовує."} },
-  { t:"Самостраховка: прусик вище пристрою", rig:4, pos:{x:372, y:30, pose:"stand"},
-    d:"Якщо зверху учасника ніхто не страхує, потрібна самостраховка: вище спускового пристрою на мотузці нав'язує прусик. Якщо інший учасник веде командну верхню страховку, самостраховка не потрібна.",
-    safety:"Без верхньої страховки — лише з прусиком над пристроєм." },
+       munter:"Карабін з вузлом УІАА встібає в кільце страхувальної системи на поясі й замуфтовує."} },
   { t:"Хват", rig:5, pos:{x:372, y:30, pose:"stand"},
-    d:"Права рука тримає мотузку, що виходить із пристрою знизу, — вона контролює видачу. Ліва рука береться за мотузку вище прусика: кулак великим пальцем униз.",
+    d:"Права рука тримає мотузку, що виходить із пристрою знизу, збоку й трохи позаду себе — вона контролює видачу. Ліва рука береться за мотузку вище прусика: кулак великим пальцем униз.",
     safety:GLOVES },
   { t:"Спуск", rig:5, move:1, pos:{x:279, y:230, pose:"rap"},
     d:"Учасник навантажується на мотузку й іде вниз: права рука дозує видачу через пристрій, ліва одночасно опускає прусик униз. Рух — до самого низу.",
+    tip:["Фіксація руки: права рука тримається збоку й трохи позаду себе, а видачу дозують силою стискання.",
+         "Сила повороту на шайбі: що сильніше завертати мотузку на пристрої, то більше тертя й повільніший спуск."],
     safety:GLOVES },
   { t:"Якщо щось трапилось", rig:5, fall:1, pos:{x:300, y:300, pose:"hang"},
     d:"Якщо учасник спіткнувся, вдарився чи з іншої причини відпустив руки, прусик схоплюється на мотузці, і людина повисає на ньому — спрацьовує самостраховка. Саме тому ліва рука тримається вище прусика й лише опускає його вниз.",
@@ -340,9 +352,10 @@ const setD = (e, d) => { e.setAttribute("d", d); e.style.d = `path("${d}")`; };
 const place = (e, [x, y], on) => { e.style.transform = `translate(${x}px, ${y}px)`; e.style.opacity = on ? 1 : 0; };
 
 let cur = 0, dev = "8", prevRig = -1, prevDev = "";
+const LOCKED = ["munter"]; // not yet checked by a human
 try {
   const v = +localStorage.getItem("dulfer-step"); if (v >= 0 && v < STEPS.length) cur = v;
-  const d = localStorage.getItem("dulfer-dev"); if (DEV_NAME[d]) dev = d;
+  const d = localStorage.getItem("dulfer-dev"); if (DEV_NAME[d] && !LOCKED.includes(d)) dev = d;
 } catch (e) {}
 const $ = id => document.getElementById(id);
 const rail = $("rail");
@@ -362,7 +375,7 @@ function render(){
   setD($("rope"), toD(pts));
   const h = hi >= 0 ? pts[hi] : pts[0], a = hi >= 0 ? pts[hi - 1] : pts[0];
   place($("mDevice"), h, s.rig >= 2 && hi >= 0);
-  place($("mPrusik"), [(a[0] + h[0]) / 2, (a[1] + h[1]) / 2 - 2], s.rig >= 4 && hi >= 0);
+  place($("mPrusik"), [(a[0] + h[0]) / 2, (a[1] + h[1]) / 2 - 2], s.rig >= 1 && hi >= 0);
   const mv = $("move");
   mv.setAttribute("transform", `translate(${p.x - 30}, ${p.y - 10})`);
   mv.style.opacity = s.move ? 1 : 0;
@@ -387,6 +400,8 @@ function render(){
   $("desc").textContent = typeof s.d === "string" ? s.d : s.d[dev];
   $("safety").hidden = !s.safety;
   $("safetyText").textContent = s.safety || "";
+  $("tip").hidden = !s.tip;
+  $("tipList").innerHTML = (s.tip || []).map(t => `<li>${t}</li>`).join("");
   $("counter").textContent = `Крок ${cur + 1} з ${STEPS.length}`;
   $("prev").disabled = cur === 0;
   $("next").textContent = cur === STEPS.length - 1 ? "Спочатку ↺" : "Далі →";
