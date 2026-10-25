@@ -50,11 +50,15 @@ section:first-child .group{margin-top:0}
   .meta{grid-column:2;text-align:left}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+.credit{font-size:14px;color:var(--muted)}
+.credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.credit a:hover{color:var(--accent)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Каталог тактичних схем</h1>
+  <p class="credit" style="margin:0 0 16px">Автор: Берегун Роман (<a href="https://t.me/romardoss">@romardoss</a> tg) для школи т/к <a href="https://t.me/kpi_globus">Глобус</a></p>
   <p class="lead">Інтерактивні покрокові ілюстрації технічних прийомів. Відкрийте схему і перемикайте кроки — учасники й мотузки рухаються між станами.</p>
   <input id="q" type="search" placeholder="Пошук за назвою або тегом…" aria-label="Пошук">
   <div id="list"></div>
@@ -74,7 +78,7 @@ const ITEMS = [
     title:"Спортивний спуск схилом",
     desc:"Спуск групи по перилах на прусику: передостанній протягує мотузку для здьоргу, останній перебудовує базу на карабінну удавку, потім мотузки здьоргують і бухтують.",
     tags:["схил 40–50°","перила","прусик","здьорг","карабінна удавка"],
-    steps:14, date:"2026-10-25", draft:true },
+    steps:15, date:"2026-10-25" },
   { group:"Базова робота з мотузками", file:"dyulfer.html",
     title:"Дюльфер",
     desc:"Техніка контрольованого спуску: вісімка, стакан або вузол УІА на кільці системи, прусик вище пристрою, хват і що відбувається, якщо відпустити руки.",

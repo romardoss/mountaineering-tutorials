@@ -118,6 +118,9 @@ aside li{display:flex;align-items:center;gap:9px}
 .dock .controls{margin:0 0 8px}
 .dock .rail{margin:0}
 .scene + .info{margin-top:20px}
+.credit{font-size:14px;color:var(--muted)}
+.credit a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.credit a:hover{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -157,30 +160,33 @@ aside li{display:flex;align-items:center;gap:9px}
       </g>
       <g id="knot" class="mv"><circle r="5.5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1.5"/></g>
       <g id="noose" class="mv">
-        <ellipse rx="3" ry="5" fill="none" stroke="var(--metal)" stroke-width="2.2"/>
-        <circle cx="6" cy="2" r="3.5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1"/>
+        <circle cx="6" cy="-4" r="3.5" fill="none" stroke="var(--rope)" stroke-width="2"/>
+        <image href="assets/carabiner.png" x="-13" y="-13" width="26" height="26" transform="rotate(35)"/>
       </g>
       <g id="lanyards"></g>
       <g id="prusiks"></g>
       <g id="people"></g>
       <g id="inset" class="fade inset" opacity="0">
-        <rect x="16" y="-30" width="340" height="236" rx="12" fill="var(--panel)" stroke="var(--line)"/>
+        <rect x="16" y="-30" width="340" height="256" rx="12" fill="var(--panel)" stroke="var(--line)"/>
         <text class="ititle" x="32" y="-8">Карабінна удавка зблизька</text>
-        <text x="32" y="12" fill="var(--muted)">здьорг — у вісімку, а не в карабін</text>
-        <ellipse cx="120" cy="92" rx="34" ry="10" fill="none" stroke="var(--rope)" stroke-width="5" opacity=".5"/>
-        <rect x="104" y="26" width="32" height="170" rx="4" fill="var(--trunk)"/>
-        <path d="M86 92 A34 10 0 0 0 154 92 L180 98" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round"/>
-        <path d="M180 98 L338 190" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round"/>
-        <path d="M186 92 L204 72" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round"/>
-        <ellipse cx="185" cy="96" rx="7" ry="12" fill="none" stroke="var(--metal)" stroke-width="3" transform="rotate(-30 185 96)"/>
-        <circle cx="206" cy="68" r="6" fill="none" stroke="var(--rope)" stroke-width="4"/>
-        <circle cx="213" cy="57" r="6" fill="none" stroke="var(--rope)" stroke-width="4"/>
-        <path d="M213 63 L338 138" fill="none" stroke="var(--pull)" stroke-width="4.5" stroke-linecap="round"/>
-        <text x="222" y="50">вісімка</text>
-        <text x="150" y="132">карабін</text>
-        <text x="285" y="108">здьорг</text>
-        <text x="250" y="184">перила</text>
-        <text x="32" y="186">дерево</text>
+        <text x="32" y="12" fill="var(--muted)">здьорг — у вісімку перил, а не в карабін</text>
+        <g transform="translate(0 20)">
+          <path d="M66 84 C76 72 96 70 120 70 C150 70 184 66 205 69" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+          <rect x="104" y="26" width="32" height="170" rx="4" fill="var(--trunk)"/>
+          <path d="M338 190 L178 107 C150 118 96 117 70 105 C57 98 58 90 66 84" fill="none" stroke="var(--rope)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="204" cy="80" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
+          <circle cx="212" cy="69" r="6.5" fill="none" stroke="var(--rope)" stroke-width="4"/>
+          <path d="M303 84 L338 103" fill="none" stroke="var(--pull)" stroke-width="4.5" stroke-linecap="round"/>
+          <circle cx="288" cy="76" r="6.5" fill="none" stroke="var(--pull)" stroke-width="4"/>
+          <circle cx="297" cy="81" r="6.5" fill="none" stroke="var(--pull)" stroke-width="4"/>
+          <image href="assets/carabiner.png" x="165" y="65" width="62" height="62" transform="rotate(215 196 96)"/>
+          <image href="assets/carabiner.png" x="234" y="51" width="62" height="62" transform="rotate(255 265 82)"/>
+          <path d="M240 82 L222 82" fill="none" stroke="var(--pull)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M213 82 L223 76.5 L223 87.5Z" fill="var(--pull)"/>
+          <text x="298" y="124">здьорг</text>
+          <text x="250" y="176">перила</text>
+          <text x="32" y="186">дерево</text>
+        </g>
       </g>
       <g id="notes" class="note"></g>
     </svg>
@@ -195,6 +201,7 @@ aside li{display:flex;align-items:center;gap:9px}
       <div class="row" id="whoRow"><span class="k">Діють:</span><span id="who"></span></div>
       <div class="row" id="cmdRow"><span class="k">Команда:</span><span id="cmd"></span></div>
       <div class="safety" id="safety"><b>Безпека</b><span id="safetyText"></span></div>
+      <div class="safety tip" id="tip"><b>Порада</b><span id="tipText"></span></div>
     </section>
     <aside>
       <h3>Учасники</h3>
@@ -217,6 +224,7 @@ aside li{display:flex;align-items:center;gap:9px}
     </div>
     <nav class="rail" id="rail" aria-label="Кроки"></nav>
   </div>
+  <footer class="credit" style="margin-top:28px">Автор: Берегун Роман (<a href="https://t.me/romardoss">@romardoss</a> tg) для школи т/к <a href="https://t.me/kpi_globus">Глобус</a></footer>
 </div>
 
 <script>
@@ -250,6 +258,17 @@ const fill = (n, p) => Array.from({length:n}, () => p);
 const padFront = (pts, n) => { while (pts.length < n) pts.unshift(pts[0]); return pts; };
 const padBack = (pts, n) => { while (pts.length < n) pts.push(pts[pts.length - 1]); return pts; };
 const nooseAt = x => [x, SY(x) - 6];
+// distance along the rail rope (tree → bottom) → point; used while the drag pulls the rope over the tree
+const CUM = STRAIGHT.reduce((a, p, i) => (a.push(i ? a[i - 1] + Math.hypot(p[0] - STRAIGHT[i - 1][0], p[1] - STRAIGHT[i - 1][1]) : 0), a), []);
+const RAIL_LEN = CUM[CUM.length - 1], EDGE_LEN = CUM[1];
+const along = d => {
+  d = Math.min(Math.max(d, 0), RAIL_LEN);
+  let i = 1; while (CUM[i] < d) i++;
+  const t = (d - CUM[i - 1]) / (CUM[i] - CUM[i - 1]), [a, b] = [STRAIGHT[i - 1], STRAIGHT[i]];
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+};
+const LANE = 9; // second strand of the rail rope lies slightly below the first
+const nooseXY = s => { if (s.drag == null) return nooseAt(s.noose); const p = along(s.drag); return [p[0], p[1] + (s.drag ? LANE : 0)]; };
 
 // --- positions
 const T = {1:P(748, {sb:"top"}), 2:P(825, {sb:"top"}), 3:P(853, {sb:"top"}), 4:P(881, {sb:"top"})};
@@ -257,7 +276,8 @@ const B = {1:P(55), 2:P(90), 3:P(125), 4:P(225)};
 const A = (...p) => Object.assign({}, T, ...p);
 const GLOVES = "Спуск — тільки в рукавичках. Руки контролюють прусик.";
 
-// rail: "coil" | "tangled" | x (straightened down to x) | "straight" | "noose" | "gone"
+// rail: "coil" | "tangled" | x (straightened down to x) | "straight" | "noose" | "drag" | "gone"
+// drag: distance the noose has been pulled away from the tree; the rail rope runs bottom → tree → noose
 // pull: "coil" | "trail" (dragged by №3) | "laid" | "noose" | "gone"
 const STEPS = [
   { t:"База з жорсткою точкою кріплення", who:[1],
@@ -269,15 +289,16 @@ const STEPS = [
     pos:A(), rail:"tangled", pull:"coil", base:"fixed", knot:1,
     notes:[{x:420, y:390, t:"вузол на кінці", c:"onrock"}],
     safety:"Вузол на кінці перил — обов'язково: якщо мотузка не дістає до низу, учасник не з'їде з її кінця." },
-  { t:"№1 спускається й розправляє перила", who:[1],
-    d:"№1 вистібається з самостраховки, встібає прусик у перила й спускається, дорогою розправляючи мотузку вниз.",
+  { t:"№1 спускається й розправляє перила", who:[1,2],
+    d:"№1, стоячи на самостраховці, нав'язує прусик на перила й встібає його в грудну обв'язку. Лише після цього вистібається з самостраховки — відтепер його страхує прусик. Потім спускається, дорогою розправляючи мотузку вниз. Поки №1 спускається, №2 уже може нав'язувати свій прусик на перила, але не встібається в нього — перила зайняті.",
     pos:A({1:P(450, {pr:1})}), rail:450, pull:"coil", base:"fixed", knot:1,
-    safety:GLOVES },
+    safety:"Спочатку встібнутися в прусик, потім знімати самостраховку: прусик і є самостраховкою. Якщо зняти її до того, як встібнувся в прусик, — це втрата страховки. " + GLOVES,
+    tip:"Контролюйте прусик рукою великим пальцем донизу, як на дюльфері: якщо великий палець упирається в прусик, усе гаразд. Якщо тримати великим пальцем угору, мізинець може налізти на вузол — і тоді він уже не спрацює. На спортивному підйомі навпаки: великим пальцем угору." },
   { t:"№1 унизу: «Вільно!»", who:[1,2], say:{1:"Вільно!"},
     d:"Унизу №1 відстібає прусик, відходить убік і подає команду «Вільно!». Перила розправлені до низу.",
     pos:A({1:B[1]}), rail:"straight", pull:"coil", base:"fixed", knot:1 },
   { t:"№2 спускається", who:[2],
-    d:"№2 встібає прусик у перила й просто спускається.",
+    d:"№2 встібає в перила прусик, який нав'язав заздалегідь, і просто спускається.",
     pos:A({1:B[1], 2:P(420, {pr:1})}), rail:"straight", pull:"coil", base:"fixed", knot:1,
     safety:GLOVES + " На перилах — одна людина." },
   { t:"№2 унизу: «Вільно!»", who:[2,3], say:{2:"Вільно!"},
@@ -291,7 +312,7 @@ const STEPS = [
     d:"№3 вистібає вус із мотузки для здьоргу, відстібає прусик і подає «Вільно!». Тепер зверху вниз ідуть дві мотузки: перила й здьорг.",
     pos:A({1:B[1], 2:B[2], 3:B[3]}), rail:"straight", pull:"laid", base:"fixed", knot:1 },
   { t:"№4 перебудовує базу на карабінну удавку", who:[4], inset:1,
-    d:"Замість жорсткого кріплення (вісімка в базу, булінь чи штик) №4 робить карабінну удавку навколо дерева. Мотузку для здьоргу встібає не в карабін удавки, а у вузол — саму вісімку. Так під час здьоргування нічого не заклинить.",
+    d:"Замість жорсткого кріплення №4 робить карабінну удавку: мотузка з вісімкою на кінці обходить дерево, а карабін встібається у вісімку і в ту саму мотузку — петля замикається. Мотузку для здьоргу з вісімкою на кінці встібають карабіном у вісімку перил, а не в карабін удавки. Так під час здьоргування нічого не заклинить.",
     pos:A({1:B[1], 2:B[2], 3:B[3]}), rail:"straight", pull:"laid", base:"noose", knot:1 },
   { t:"№4 розбирає базу і спускається", who:[4], inset:1,
     d:"№4 забирає всі елементи бази — петлі, карабіни — і спускається по перилах на прусику. Нагорі лишається тільки удавка на дереві.",
@@ -305,9 +326,12 @@ const STEPS = [
     pos:A(B), rail:"straight", pull:"laid", base:"noose", knot:0,
     notes:[{x:185, y:530, t:"вузол розв'язано", c:"onrock"}],
     safety:"Нерозв'язаний вузол заклинить у карабіні удавки — мотузка застрягне нагорі." },
-  { t:"Усі тягнуть здьорг", who:[1,2,3,4], noose:470,
-    d:"Усі тягнуть за мотузку для здьоргу, хтось один одразу її бухтує. Удавка звільняє дерево і разом із перилами їде вниз.",
-    pos:A(B), rail:"noose", pull:"noose", base:"none", knot:0 },
+  { t:"Тягнемо здьорг: удавка злітає з дерева", who:[1,2,3,4], drag:90,
+    d:"Усі тягнуть за мотузку для здьоргу — вона тягне за собою карабінну удавку. Удавка зсувається з дерева, а мотузки не падають: вони лишаються з'єднані карабіном. Здьорг іде на фінішний берег, а нижній кінець перил починає підніматись до дерева.",
+    pos:A(B), rail:"drag", pull:"noose", base:"none", knot:0 },
+  { t:"Перила протягуються через дерево", who:[1,2,3,4], drag:300,
+    d:"Здьорг далі тягнеться на фінішний берег, а перильна мотузка — через перегин дерева: її нижній кінець іде вгору до дерева, переходить на стартовий бік і спускається вслід за удавкою. Тому нерозв'язаний вузол і заклинив би.",
+    pos:A(B), rail:"drag", pull:"noose", base:"none", knot:0 },
   { t:"Удавка внизу — бухтуємо", who:[1,2,3,4],
     d:"Карабінна удавка приїхала. Розстібають карабіни й розв'язують вузол, вибирають перильну мотузку і теж бухтують. Нагорі нічого не лишилось.",
     pos:A(B), rail:"gone", pull:"gone", base:"none", knot:0,
@@ -359,6 +383,10 @@ function railPts(s){
   if (r === "tangled") return TANGLED;
   if (r === "straight") return STRAIGHT;
   if (r === "gone") return fill(n, COIL.railBot);
+  if (r === "drag"){
+    const d = s.drag, lane = p => [p[0], p[1] + LANE];
+    return padFront([nooseXY(s), lane(along(Math.min(d, EDGE_LEN))), along(0), along(Math.min(EDGE_LEN, RAIL_LEN - d)), along(RAIL_LEN - d)], n);
+  }
   if (r === "noose"){ const k = nooseAt(s.noose); return padFront([k, ...STRAIGHT.filter((p, i) => i >= 2 && p[0] < k[0])], n); }
   // straightened down to x = r, still tangled below
   return padBack([...STRAIGHT.filter((p, i) => i < 2 || p[0] >= r), ...TANGLED.filter((p, i) => i >= 2 && p[0] < r - 5)], n);
@@ -368,7 +396,7 @@ function pullPts(s){
   if (r === "coil") return [ANCH2, ...fill(n - 1, COIL.pullTop)];
   if (r === "laid") return PULL;
   if (r === "gone") return fill(n, COIL.pullBot);
-  if (r === "noose"){ const k = nooseAt(s.noose); return padFront([k, ...PULL.filter((p, i) => i >= 2 && p[0] < k[0])], n); }
+  if (r === "noose"){ const k = nooseXY(s); return padFront([k, ...PULL.filter((p, i) => i >= 2 && p[0] < k[0])], n); }
   const h = harness(s.pos[3]); // trail: dragged by №3's lanyard
   return padBack([...PULL.filter((p, i) => i < 2 || p[0] > h[0]), h], n);
 }
@@ -414,10 +442,10 @@ function render(){
   setD($("rope"), toD(rp));
   setD($("pull"), toD(pp));
   const railOn = s.rail !== "coil" && s.rail !== "gone";
-  place($("knot"), rp[rp.length - 1], s.knot && railOn && s.rail !== "noose");
+  place($("knot"), rp[rp.length - 1], s.knot && railOn && !["noose", "drag"].includes(s.rail));
   place($("coilR"), s.rail === "gone" ? COIL.railBot : COIL.railTop, !railOn);
   place($("coilP"), ["noose", "gone"].includes(s.pull) ? COIL.pullBot : COIL.pullTop, s.pull !== "laid");
-  place($("noose"), s.rail === "noose" ? nooseAt(s.noose) : s.rail === "gone" ? COIL.nooseBot : ANCH.top, s.base === "noose" || s.rail === "noose" || s.rail === "gone");
+  place($("noose"), ["noose", "drag"].includes(s.rail) ? nooseXY(s) : s.rail === "gone" ? COIL.nooseBot : ANCH.top, s.base === "noose" || ["noose", "drag", "gone"].includes(s.rail));
   $("baseFixed").style.opacity = s.base === "fixed" ? 1 : 0;
   $("wrap").style.opacity = s.base === "noose" ? 1 : 0;
   $("inset").style.opacity = s.inset ? 1 : 0;
@@ -455,6 +483,8 @@ function render(){
   $("cmd").innerHTML = says.map(([id, t]) => `<span class="cmd">${ROLES[id].short}: «${t}»</span>`).join(" ");
   $("safety").hidden = !s.safety;
   $("safetyText").textContent = s.safety || "";
+  $("tip").hidden = !s.tip;
+  $("tipText").textContent = s.tip || "";
 
   $("counter").textContent = `Крок ${cur + 1} з ${STEPS.length}`;
   $("prev").disabled = cur === 0;
