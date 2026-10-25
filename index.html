@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталог тактичних схем</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f1ea; --panel:#fbfaf6; --ink:#1f2420; --muted:#5d655e; --line:#d6d2c4;
+  --accent:#e4521b; --tag:#e7efe4; --tag-ink:#36553a; --warn:#fff0d6; --warn-ink:#8a4b00;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141917; --panel:#1b211f; --ink:#e8ebe6; --muted:#a3ada5; --line:#323b37;
+    --accent:#ff6a30; --tag:#24322a; --tag-ink:#a9cfa9; --warn:#3a2a12; --warn-ink:#f2c27a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141917; --panel:#1b211f; --ink:#e8ebe6; --muted:#a3ada5; --line:#323b37;
+  --accent:#ff6a30; --tag:#24322a; --tag-ink:#a9cfa9; --warn:#3a2a12; --warn-ink:#f2c27a;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Golos Text",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:40px 16px 64px}
+h1{font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(24px,4vw,38px);line-height:1.15;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 24px;max-width:62ch}
+input{width:100%;font:inherit;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);margin-bottom:22px}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+li{border-bottom:1px solid var(--line)}
+a.item{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:16px;align-items:start;padding:18px 4px;color:inherit;text-decoration:none}
+a.item:hover h2{color:var(--accent)}
+a.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.n{font-family:Unbounded,sans-serif;font-weight:500;font-size:20px;color:var(--accent);line-height:1.3}
+h2{font-family:Unbounded,sans-serif;font-weight:500;font-size:clamp(17px,2.2vw,20px);line-height:1.3;margin:0 0 4px;transition:color .2s}
+p{margin:0 0 8px;color:var(--muted);max-width:62ch}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:13px;background:var(--tag);color:var(--tag-ink);border-radius:99px;padding:1px 10px}
+.meta{font-size:14px;color:var(--muted);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.empty{color:var(--muted);padding:20px 4px}
+.group{font-family:Unbounded,sans-serif;font-weight:500;font-size:14px;color:var(--muted);margin:28px 0 10px}
+section:first-child .group{margin-top:0}
+.draft{display:inline-block;margin:0 0 8px;font-size:13px;font-weight:600;color:var(--warn-ink);background:var(--warn);border-radius:6px;padding:2px 9px}
+@media (max-width:600px){
+  a.item{grid-template-columns:36px minmax(0,1fr)}
+  .meta{grid-column:2;text-align:left}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Каталог тактичних схем</h1>
+  <p class="lead">Інтерактивні покрокові ілюстрації технічних прийомів. Відкрийте схему і перемикайте кроки — учасники й мотузки рухаються між станами.</p>
+  <input id="q" type="search" placeholder="Пошук за назвою або тегом…" aria-label="Пошук">
+  <div id="list"></div>
+  <div class="empty" id="empty" hidden>Нічого не знайдено.</div>
+</div>
+<script>
+// Нова схема = новий об'єкт у цьому масиві. Порядок у масиві = порядок у каталозі (за зростанням).
+// group — назва розділу; розділи йдуть у порядку першої появи.
+// draft:true — показує попередження «ще в тестуванні»; прибирати лише після перевірки людиною.
+const ITEMS = [
+  { group:"Базова робота з мотузками", file:"sportyvnyi-pidiom.html",
+    title:"Спортивний підйом схилом",
+    desc:"Група з чотирьох: перший іде на нижній страховці з ППС, далі база на дереві й підйом по перилах на прусику. Останній — на вибір: по перилах або на верхній страховці.",
+    tags:["схил 40–50°","нижня страховка","ППС","перила","прусик","верхня страховка"],
+    steps:16, date:"2026-10-25", draft:true },
+  { group:"Базова робота з мотузками", file:"sportyvnyi-spusk.html",
+    title:"Спортивний спуск схилом",
+    desc:"Спуск групи по перилах на прусику: передостанній протягує мотузку для здьоргу, останній перебудовує базу на карабінну удавку, потім мотузки здьоргують і бухтують.",
+    tags:["схил 40–50°","перила","прусик","здьорг","карабінна удавка"],
+    steps:14, date:"2026-10-25", draft:true },
+  { group:"Базова робота з мотузками", file:"dyulfer.html",
+    title:"Дюльфер",
+    desc:"Техніка контрольованого спуску: вісімка, стакан або вузол УІА на кільці системи, прусик вище пристрою, хват і що відбувається, якщо відпустити руки.",
+    tags:["вертикаль","спусковий пристрій","вісімка","стакан","УІА","прусик","індивідуальна техніка"],
+    steps:8, date:"2026-10-25", draft:true },
+  { group:"Базова робота з мотузками", file:"kosyi-dyulfer.html",
+    title:"Косий дюльфер",
+    desc:"Група з чотирьох: перший спускається на верхній страховці й робить базу, мотузку перебудовують на карабінну удавку й натягують гардою, решта спускається по діагоналі на спусковому пристрої, потім здьорг.",
+    tags:["дюльфер","верхня страховка","гарда","карабінна удавка","здьорг"],
+    steps:16, date:"2026-10-25", draft:true },
+  { group:"Базова робота з мотузками", file:"zhumaryng.html",
+    title:"Жумаринг по вертикальних перилах",
+    desc:"Індивідуальна техніка: жумар, вус, блокуючий карабін і прусик на перилах, потім підйом з опорою на рельєф або рухом тазу на гладкій стіні.",
+    tags:["вертикаль","жумар","прусик","індивідуальна техніка"],
+    steps:9, date:"2026-10-25", draft:true },
+];
+
+const list = document.getElementById("list"), empty = document.getElementById("empty"), q = document.getElementById("q");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("uk-UA", {day:"numeric", month:"long", year:"numeric"});
+const plural = n => n % 10 === 1 && n % 100 !== 11 ? "крок" : [2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100) ? "кроки" : "кроків";
+
+function render(){
+  const term = q.value.trim().toLowerCase();
+  const shown = ITEMS.filter(it => !term || [it.group, it.title, it.desc, ...it.tags].join(" ").toLowerCase().includes(term));
+  const groups = [...new Set(shown.map(it => it.group))];
+  list.innerHTML = groups.map(g => `<section><h3 class="group">${esc(g)}</h3><ol>` + shown.filter(it => it.group === g).map(it => `
+    <li><a class="item" href="${esc(it.file)}">
+      <span class="n">${String(ITEMS.indexOf(it) + 1).padStart(2, "0")}</span>
+      <span>
+        <h2>${esc(it.title)}</h2>
+        ${it.draft ? `<span class="draft">⚠ Ще в тестуванні, можуть бути помилки</span>` : ""}
+        <p>${esc(it.desc)}</p>
+        <span class="tags">${it.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</span>
+      </span>
+      <span class="meta">${it.steps} ${plural(it.steps)}<br>${fmtDate(it.date)}</span>
+    </a></li>`).join("") + `</ol></section>`).join("");
+  empty.hidden = shown.length > 0;
+}
+q.addEventListener("input", render);
+render();
+</script>
+</body>
+</html>

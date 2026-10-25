@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Косий дюльфер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f1ea; --panel:#fbfaf6; --ink:#1f2420; --muted:#5d655e; --line:#d6d2c4;
+  --sky1:#bcd7e6; --sky2:#e9f0ec; --hill:#a7bfae; --hill2:#c3d3c3;
+  --rock:#8b7b67; --strata:#6f614f; --grass:#6b8d4b;
+  --trunk:#5a4535; --leaf:#3e6a3a; --leaf2:#4f7f45;
+  --rope:#e4521b; --pull:#0f9bb8; --prusik:#7a4fd0; --lanyard:#2b2f2c; --metal:#9aa3a8;
+  --p1:#d42f6a; --p2:#2d6bd3; --p3:#d99a00; --p4:#23966a;
+  --skin:#f0c9a5; --body:#2c3330;
+  --accent:#e4521b; --safety-bg:#fff1e3; --safety-line:#f0a36b;
+  --bubble:#ffffff; --halo:rgba(228,82,27,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141917; --panel:#1b211f; --ink:#e8ebe6; --muted:#a3ada5; --line:#323b37;
+    --sky1:#1a2a36; --sky2:#26343a; --hill:#2c3f3a; --hill2:#33463f;
+    --rock:#5a4e41; --strata:#463c31; --grass:#4c6a38;
+    --trunk:#7a604b; --leaf:#3a6436; --leaf2:#4a7a42;
+    --rope:#ff6a30; --pull:#3cc6e0; --prusik:#a585f0; --lanyard:#d8dcd6; --metal:#b8c0c4;
+    --p1:#ff5c8f; --p2:#5b93ff; --p3:#f2b62a; --p4:#3cc28c;
+    --skin:#e7bf9a; --body:#dfe4df;
+    --accent:#ff6a30; --safety-bg:#33241a; --safety-line:#a0562b;
+    --bubble:#232b28; --halo:rgba(255,106,48,.32);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141917; --panel:#1b211f; --ink:#e8ebe6; --muted:#a3ada5; --line:#323b37;
+  --sky1:#1a2a36; --sky2:#26343a; --hill:#2c3f3a; --hill2:#33463f;
+  --rock:#5a4e41; --strata:#463c31; --grass:#4c6a38;
+  --trunk:#7a604b; --leaf:#3a6436; --leaf2:#4a7a42;
+  --rope:#ff6a30; --pull:#3cc6e0; --prusik:#a585f0; --lanyard:#d8dcd6; --metal:#b8c0c4;
+  --p1:#ff5c8f; --p2:#5b93ff; --p3:#f2b62a; --p4:#3cc28c;
+  --skin:#e7bf9a; --body:#dfe4df;
+  --accent:#ff6a30; --safety-bg:#33241a; --safety-line:#a0562b;
+  --bubble:#232b28; --halo:rgba(255,106,48,.32);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Golos Text",system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+h1{font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(22px,3.4vw,34px);line-height:1.15;margin:0 0 6px}
+.lead{color:var(--muted);margin:0 0 18px;max-width:70ch}
+kbd{font:inherit;font-size:.85em;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:var(--panel)}
+.scene{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--sky2)}
+svg{display:block;width:100%;height:auto}
+.fade{transition:opacity .6s}
+.person{transition:transform 1s cubic-bezier(.45,.05,.3,1)}
+.pose{transition:opacity .45s}
+.halo{fill:var(--halo);opacity:0;transition:opacity .4s}
+.person.active .halo{opacity:1}
+.ropeline{fill:none;stroke:var(--rope);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;transition:d .9s cubic-bezier(.45,.05,.3,1)}
+.lan{fill:none;stroke:var(--lanyard);stroke-width:2;stroke-linecap:round;transition:d 1s cubic-bezier(.45,.05,.3,1),opacity .5s}
+.pru{fill:none;stroke:var(--prusik);stroke-width:2.6;stroke-linecap:round;transition:d 1s cubic-bezier(.45,.05,.3,1),opacity .5s}
+.pru.loose{stroke-dasharray:3 3}
+.mv{transition:transform .9s cubic-bezier(.45,.05,.3,1),opacity .5s}
+.note text,.lbl{font:600 13px "Golos Text",sans-serif;fill:var(--ink);paint-order:stroke;stroke:var(--sky2);stroke-width:4px;stroke-linejoin:round}
+.lbl.onrock{fill:#fff;stroke:var(--strata)}
+.bubble{animation:pop .45s .55s both}
+.bubble rect,.bubble path{fill:var(--bubble);stroke:var(--accent);stroke-width:1.5}
+.bubble text{font:700 14px "Golos Text",sans-serif;fill:var(--ink);stroke:none}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 10px}
+button{font:600 15px "Golos Text",sans-serif;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 16px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:disabled{opacity:.4;cursor:default}
+.counter{color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.rail{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;margin-bottom:22px}
+.rail button{padding:6px 0;border-radius:6px;font-size:12px;font-weight:600;color:var(--muted)}
+.rail button.done{background:color-mix(in srgb,var(--accent) 16%,var(--panel))}
+.rail button[aria-current="step"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.info{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px}
+.num{font-family:Unbounded,sans-serif;font-size:13px;color:var(--accent);font-weight:700}
+h2{font-family:Unbounded,sans-serif;font-weight:500;font-size:clamp(19px,2.4vw,24px);line-height:1.25;margin:2px 0 10px}
+.desc{max-width:62ch;margin:0 0 14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.row .k{color:var(--muted);font-size:14px;margin-right:2px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:99px;padding:2px 10px 2px 4px;font-size:14px;background:var(--panel)}
+.chip i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;font-weight:700;font-size:12px}
+.cmd{font-weight:700;border:1.5px solid var(--accent);border-radius:8px;padding:2px 10px;background:var(--panel)}
+.safety{border-left:4px solid var(--safety-line);background:var(--safety-bg);border-radius:0 10px 10px 0;padding:10px 14px;max-width:62ch}
+.safety b{display:block;font-size:14px;margin-bottom:2px}
+.safety[hidden],.row[hidden],.fork[hidden]{display:none}
+.tip{border-left-color:var(--p2);background:color-mix(in srgb,var(--p2) 10%,var(--panel));margin-top:10px}
+.fork{display:grid;gap:8px;margin-top:14px;max-width:62ch}
+.fork button{text-align:left}
+.branch{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+.branch button{padding:6px 12px;font-size:14px}
+[data-branch][aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--panel));color:var(--ink)}
+aside{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--panel);align-self:start}
+aside h3{font-family:Unbounded,sans-serif;font-size:13px;font-weight:500;margin:0 0 10px}
+aside ol{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:7px;font-size:14px}
+aside li{display:flex;align-items:center;gap:9px}
+.sw{width:26px;height:0;border-top:3px solid}
+.dot{width:18px;height:18px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700}
+@media (max-width:820px){
+  .info{grid-template-columns:1fr}
+  .rail{grid-template-columns:repeat(8,1fr)}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+.pullline{fill:none;stroke:var(--pull);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;transition:d .9s cubic-bezier(.45,.05,.3,1)}
+.inset text{font:600 12.5px "Golos Text",sans-serif;fill:var(--ink)}
+.inset .ititle{font:500 13px Unbounded,sans-serif}
+.dock{position:sticky;bottom:0;z-index:5;margin:28px -16px 0;padding:10px 16px 12px;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-top:1px solid var(--line)}
+.dock .controls{margin:0 0 8px}
+.dock .rail{margin:0}
+.scene + .info{margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Косий дюльфер</h1>
+  <p class="lead">Коли рельєф незручний для звичайного дюльфера, але й круто похилу переправу натягнути не виходить. Група з чотирьох: перший спускається на верхній страховці, далі мотузку натягують, а решта спускається по діагоналі. Спуск — лише в рукавичках.</p>
+
+  <div class="scene">
+    <svg id="svg" viewBox="0 -20 1000 600" role="img" aria-label="Схема косого дюльфера">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="var(--sky1)"/><stop offset="1" stop-color="var(--sky2)"/>
+        </linearGradient>
+      </defs>
+      <rect y="-20" width="1000" height="600" fill="url(#sky)"/>
+      <path d="M0 300 C120 270 220 290 330 250 C430 215 520 240 600 190 L600 580 L0 580Z" fill="var(--hill2)"/>
+      <path d="M0 420 C40 410 70 420 90 415 L90 580 L0 580Z" fill="var(--hill)"/>
+      <path id="terrain" fill="var(--rock)"/>
+      <g stroke="var(--strata)" stroke-width="2" fill="none" opacity=".7">
+        <path d="M120 480 L260 470 M330 500 L470 430 M520 400 L620 260 M700 170 L960 170 M760 260 L990 260 M110 540 L240 545"/>
+      </g>
+      <g fill="var(--strata)" opacity=".85">
+        <path d="M340 446 L356 432 L372 446Z M455 378 L470 362 L486 374Z M530 318 L548 300 L560 314Z M588 214 L600 196 L612 210Z"/>
+      </g>
+      <path id="grassLine" fill="none" stroke="var(--grass)" stroke-width="6" stroke-linejoin="round"/>
+      <text class="lbl" x="45" y="500" text-anchor="middle">урвище</text>
+      <text class="lbl onrock" x="180" y="470" text-anchor="middle">безпечна зона</text>
+      <g id="trees"></g>
+      <g id="topFixed" class="fade">
+        <ellipse cx="660" cy="62" rx="8" ry="3" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+        <ellipse cx="666" cy="62" rx="2.6" ry="4.2" fill="none" stroke="var(--metal)" stroke-width="2"/>
+      </g>
+      <ellipse id="wrap" class="fade" cx="660" cy="64" rx="9" ry="3.5" fill="none" stroke="var(--rope)" stroke-width="3" opacity="0"/>
+      <g id="botBase" class="fade" opacity="0">
+        <ellipse cx="115" cy="406" rx="9" ry="3.5" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+      </g>
+      <g id="cars" class="fade" opacity="0" fill="none" stroke="var(--metal)" stroke-width="2.4">
+        <ellipse cx="124" cy="402" rx="3" ry="5.5"/><ellipse cx="131" cy="402" rx="3" ry="5.5"/>
+      </g>
+      <path id="pull" class="pullline"/>
+      <path id="rope" class="ropeline"/>
+      <g id="garda" class="fade" opacity="0">
+        <circle cx="128" cy="404" r="5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1.2"/>
+      </g>
+      <g id="shtyky" class="fade" opacity="0" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1">
+        <circle cx="140" cy="416" r="3.5"/><circle cx="148" cy="420" r="3.5"/>
+      </g>
+      <g id="coilA" class="mv" fill="none" stroke="var(--rope)" stroke-width="2.6">
+        <ellipse rx="15" ry="5"/><ellipse cy="-4" rx="13" ry="4.5"/><ellipse cy="-8" rx="11" ry="4"/>
+      </g>
+      <g id="coilB" class="mv" fill="none" stroke="var(--pull)" stroke-width="2.6">
+        <ellipse rx="15" ry="5"/><ellipse cy="-4" rx="13" ry="4.5"/><ellipse cy="-8" rx="11" ry="4"/>
+      </g>
+      <g id="knot" class="mv"><circle r="5.5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1.5"/></g>
+      <g id="noose" class="mv">
+        <ellipse rx="3" ry="5" fill="none" stroke="var(--metal)" stroke-width="2.2"/>
+        <circle cx="6" cy="2" r="3.5" fill="var(--rope)" stroke="var(--lanyard)" stroke-width="1"/>
+      </g>
+      <g id="device" class="mv"><circle r="4.5" fill="var(--metal)" stroke="var(--lanyard)" stroke-width="1.5"/></g>
+      <g id="lanyards"></g>
+      <g id="people"></g>
+      <g id="notes" class="note"></g>
+    </svg>
+  </div>
+
+  <div class="info">
+    <section aria-live="polite">
+      <div class="num" id="num"></div>
+      <h2 id="title"></h2>
+      <p class="desc" id="desc"></p>
+      <div class="row" id="whoRow"><span class="k">Діють:</span><span id="who"></span></div>
+      <div class="row" id="cmdRow"><span class="k">Команда:</span><span id="cmd"></span></div>
+      <div class="safety" id="safety"><b>Безпека</b><span id="safetyText"></span></div>
+    </section>
+    <aside>
+      <h3>Учасники</h3>
+      <ol id="legendPeople"></ol>
+      <h3>Лінії</h3>
+      <ol>
+        <li><span class="sw" style="border-color:var(--rope)"></span>Перила → натягнута мотузка</li>
+        <li><span class="sw" style="border-color:var(--pull)"></span>Страхувальна → мотузка зі здьоргом</li>
+        <li><span class="sw" style="border-color:var(--lanyard);border-top-width:2px"></span>Вус самостраховки</li>
+        <li><span class="dot" style="background:var(--metal);width:12px;height:12px"></span>Спусковий пристрій / карабін</li>
+        <li><span class="dot" style="background:var(--rope);width:12px;height:12px"></span>Вузол</li>
+      </ol>
+    </aside>
+  </div>
+  <div class="dock">
+    <div class="controls">
+      <button id="prev">← Назад</button>
+      <button id="next" class="primary">Далі →</button>
+      <span class="counter" id="counter"></span>
+    </div>
+    <nav class="rail" id="rail" aria-label="Кроки"></nav>
+  </div>
+</div>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const ROLES = {
+  1:{name:"№1 — спускається першим, робить базу внизу", short:"№1", color:"var(--p1)"},
+  2:{name:"№2", short:"№2", color:"var(--p2)"},
+  3:{name:"№3", short:"№3", color:"var(--p3)"},
+  4:{name:"№4 — останній, страхує №1 і робить удавку", short:"№4", color:"var(--p4)"},
+};
+
+// --- terrain: top plateau (y=110) on the right, rugged steep face, safe ledge (y=430) above the abyss on the left
+const TER = [[270,430],[320,452],[370,440],[420,395],[470,372],[510,330],[545,300],[575,230],[610,175],[640,110]];
+function gy(x){
+  if (x <= 270) return 430;
+  if (x >= 640) return 110;
+  for (let i = 1; i < TER.length; i++){
+    const [a, b] = [TER[i - 1], TER[i]];
+    if (x <= b[0]) return a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]);
+  }
+}
+const TERRAIN_D = "M90 580 L90 430 " + TER.map(p => "L" + p.join(" ")).join(" ") + " L1000 110 L1000 580Z";
+document.getElementById("terrain").setAttribute("d", TERRAIN_D);
+document.getElementById("grassLine").setAttribute("d", "M90 430 " + TER.map(p => "L" + p.join(" ")).join(" ") + " L1000 110");
+
+const K = 1.3; // figure scale
+const P = (x, o = {}) => ({x, y: gy(x), m: (x > 270 && x < 640) ? "c" : "s", ...o});
+const TOPA = [666, 62], TOP8 = [668, 70], BASE = [121, 404], BASE2 = [121, 412], EDGE = [642, 104], EDGE2 = [642, 98];
+const lineY = x => TOPA[1] + (TOPA[0] - x) * (BASE[1] - TOPA[1]) / (TOPA[0] - BASE[0]);
+const H = x => ({x, y: lineY(x) + 18, m:"h"}); // hanging under the tensioned rope on a short lanyard
+const harness = p => p.m === "c" ? [p.x + 5 * K, p.y - 16 * K] : p.m === "h" ? [p.x, p.y] : [p.x, p.y - 18 * K];
+const chest = p => p.m === "c" ? [p.x + 9 * K, p.y - 24 * K] : [p.x + 2 * K, p.y - 26 * K];
+const lerp = (a, b, t) => a + (b - a) * t;
+
+// --- ropes: 12 points always, so `d` animates
+const N = 12;
+const XS = [610, 575, 545, 510, 470, 420, 370, 320];
+const fill = (p) => Array.from({length:N}, () => p);
+const padFront = pts => { while (pts.length < N) pts.unshift(pts[0]); return pts; };
+const padBack = pts => { while (pts.length < N) pts.push(pts[pts.length - 1]); return pts; };
+const COIL = {aTop:[725, 112], bTop:[775, 112], aBot:[190, 432], bBot:[222, 432]};
+const nooseAt = x => [x, gy(x) - 5];
+
+function ropeA(s){
+  const a = s.a;
+  if (a === "coil") return [TOPA, ...fill(COIL.aTop).slice(1)];
+  if (a === "laid") return [TOPA, EDGE, ...XS.map(x => [x, gy(x) - 4]), [270, 426], [215, 427]];
+  if (a === "tight"){
+    const pts = [];
+    for (let i = 0; i < N - 1; i++){ const t = i / (N - 2); pts.push([lerp(TOPA[0], BASE[0], t), lerp(TOPA[1], BASE[1], t)]); }
+    return [...pts, [165, 428]];
+  }
+  if (a === "slack") return [TOPA, EDGE, ...XS.map(x => [x, gy(x) - 4]), [270, 426], [170, 428]];
+  if (a === "pulling") return padFront([nooseAt(s.noose), ...XS.filter(x => x < s.noose).map(x => [x, gy(x) - 4]), [270, 426], [170, 428]]);
+  return fill(COIL.aBot);
+}
+function descB(h){
+  const f = (TOP8[0] - h[0]) / (TOP8[0] - BASE2[0]);
+  const nA = Math.min(N - 2, Math.max(2, Math.round(N * f)));
+  const pts = [];
+  for (let i = 0; i < nA; i++){ const t = i / (nA - 1); pts.push([lerp(TOP8[0], h[0], t), lerp(TOP8[1], h[1], t) + Math.sin(Math.PI * t) * 12]); }
+  const nB = N - nA;
+  for (let i = 1; i <= nB; i++){ const t = i / nB; pts.push([lerp(h[0], BASE2[0], t), lerp(h[1], BASE2[1], t) + Math.sin(Math.PI * t) * 30]); }
+  return pts;
+}
+function ropeB(s){
+  const b = s.b, dev4 = () => { const h = harness(s.pos[4]); return [h[0] - 7, h[1] + 2]; };
+  const laid = XS.map(x => [x, gy(x) - 10]);
+  if (b === "coil") return fill(COIL.bTop);
+  if (b === "belay"){
+    const c = chest(s.pos[1]);
+    if (c[0] < 300) return [dev4(), EDGE2, ...laid, [270, 420], c];
+    return padBack([dev4(), EDGE2, ...laid.filter(p => p[0] > c[0] + 10), c]);
+  }
+  if (b === "based") return [dev4(), EDGE2, ...laid, [270, 420], BASE2];
+  if (b === "pull") return [TOP8, EDGE2, ...laid, [270, 420], BASE2];
+  if (b === "desc") return descB(harness(s.pos[s.who[0]]));
+  if (b === "pulling") return padFront([nooseAt(s.noose), ...laid.filter(p => p[0] < s.noose), [270, 420], [200, 414]]);
+  return fill(COIL.bBot);
+}
+
+// --- positions
+const T = {1:P(700), 2:P(880), 3:P(910), 4:P(745)};
+const B = {1:P(165), 2:P(195), 3:P(225), 4:P(255)};
+const A = (...p) => Object.assign({}, T, ...p);
+const GLOVES = "Спуск — тільки в рукавичках.";
+
+const STEPS = [
+  { t:"Перила скидають униз", who:[4],
+    d:"Нагорі перильну мотузку жорстко кріплять до дерева і скидають униз — по ній спускатиметься №1. Дюльфер має йти по жорсткій опорі. На кінці мотузки — вузол.",
+    pos:A(), a:"laid", b:"coil", top:"fixed", knot:1,
+    notes:[{x:700, y:150, t:"жорстка база", c:"onrock"}] },
+  { t:"Верхня командна страховка для №1", who:[4,1], say:{4:"Страховка готова!"},
+    d:"№4 організовує для №1 верхню командну страховку другою мотузкою і встібає її №1 у грудну обв'язку. №1 встібає спусковий пристрій у перила.",
+    pos:A(), a:"laid", b:"belay", top:"fixed", knot:1, dev:1 },
+  { t:"№1 дюльферує на верхній страховці", who:[1,4],
+    d:"№1 спускається дюльфером по перилах, №4 страхує його зверху. Мета — дійти до безпечної зони.",
+    pos:A({1:P(470)}), a:"laid", b:"belay", top:"fixed", knot:1, dev:1,
+    safety:GLOVES },
+  { t:"№1 у безпечній зоні: база", who:[1],
+    d:"Дійшовши до безпечної зони, №1 організовує базу на дереві. Тепер у нього дві мотузки: перильна, по якій він спускався, і страхувальна.",
+    pos:A({1:B[1]}), a:"laid", b:"belay", top:"fixed", knot:1, base:1,
+    notes:[{x:115, y:350, t:"база внизу"}] },
+  { t:"Страхувальну мотузку — у базу", who:[1],
+    d:"№1 відчіплює страхувальну мотузку від себе і встібає її в базу, щоб вона нікуди не загубилась і не впала далі в урвище.",
+    pos:A({1:B[1]}), a:"laid", b:"based", top:"fixed", knot:1, base:1 },
+  { t:"Два карабіни в базу", who:[1],
+    d:"У базу №1 встібає два карабіни — бажано сталеві й однакової форми. Через них він потім зробить вузол гарда. Далі чекає на №4.",
+    pos:A({1:B[1]}), a:"laid", b:"based", top:"fixed", knot:1, base:1, cars:1,
+    notes:[{x:115, y:350, t:"два карабіни"}] },
+  { t:"№4 робить карабінну удавку: «Натяг!»", who:[4], say:{4:"Натяг!"},
+    d:"№4 відчіплює перильну мотузку від жорсткої бази й перебудовує її на карабінну удавку навколо дерева. Кінець страхувальної мотузки, якою він страхував №1, одразу встібає в здьорг — у вісімку удавки. Коли удавка готова, №4 подає команду «Натяг!».",
+    pos:A({1:B[1]}), a:"laid", b:"pull", top:"noose", knot:1, base:1, cars:1,
+    notes:[{x:700, y:150, t:"карабінна удавка", c:"onrock"}, {x:470, y:300, t:"здьорг"}] },
+  { t:"Гарда і натяг", who:[1],
+    d:"Після команди «Натяг!» №1 вибирає зайву перильну мотузку, простібує її через два карабіни, утворюючи вузол гарда, замуфтовує карабіни й натягує мотузку.",
+    pos:A({1:B[1]}), a:"tight", b:"pull", top:"noose", base:1, cars:1, garda:1,
+    notes:[{x:460, y:220, t:"натягнута мотузка"}, {x:128, y:380, t:"гарда"}] },
+  { t:"Два штики: «Два штики!»", who:[1], say:{1:"Два штики!"},
+    d:"Після натягу №1 фіксує гарду двома штиками й подає команду «Два штики!». Тепер можна спускатися решті.",
+    pos:A({1:B[1]}), a:"tight", b:"pull", top:"noose", base:1, cars:1, garda:1, shtyky:1,
+    notes:[{x:128, y:380, t:"гарда + два штики"}] },
+  { t:"№2 спускається косим дюльфером", who:[2], dev:2,
+    d:"Учасник встібає спусковий пристрій у мотузку зі здьоргом, а вус самостраховки — у натягнуту мотузку. Вус краще вкоротити, щоб не опускатися сильно нижче мотузки. Людина рухається по діагоналі, а швидкість контролює спусковим пристроєм.",
+    pos:A({1:B[1], 2:H(450)}), a:"tight", b:"desc", top:"noose", base:1, cars:1, garda:1, shtyky:1, sb:{2:1},
+    safety:GLOVES + " Вус — вкорочений." },
+  { t:"№2 унизу", who:[2],
+    d:"Спустившись, №2 відчіплюється від натягнутої мотузки, а потім — від мотузки зі здьоргом.",
+    pos:A({1:B[1], 2:B[2]}), a:"tight", b:"pull", top:"noose", base:1, cars:1, garda:1, shtyky:1 },
+  { t:"№3 спускається так само", who:[3], dev:3,
+    d:"№3 так само: пристрій — у мотузку зі здьоргом, вкорочений вус — у натягнуту мотузку. Унизу відчіплюється від обох мотузок.",
+    pos:A({1:B[1], 2:B[2], 3:H(430)}), a:"tight", b:"desc", top:"noose", base:1, cars:1, garda:1, shtyky:1, sb:{3:1},
+    safety:GLOVES },
+  { t:"№4 спускається останнім", who:[4], dev:4,
+    d:"Нагорі лишається тільки карабінна удавка. №4 спускається так само і внизу відчіплюється від обох мотузок.",
+    pos:A({1:B[1], 2:B[2], 3:B[3], 4:H(480)}), a:"tight", b:"desc", top:"noose", base:1, cars:1, garda:1, shtyky:1, sb:{4:1},
+    safety:GLOVES },
+  { t:"Розібрати гарду й розв'язати вузли", who:[1],
+    d:"Коли останній спустився, гарду розштиковують і розбирають. Усі вісімки й вузли на тій частині мотузки, що піде через карабінну удавку, розв'язують.",
+    pos:A(B), a:"slack", b:"pull", top:"noose", base:1, cars:1,
+    safety:"Через карабінну удавку має йти пряма мотузка без жодного вузла — інакше вона заклинить нагорі." },
+  { t:"Тягнемо за здьорг", who:[1,2,3,4], noose:470,
+    d:"Усі тягнуть за мотузку зі здьоргом. Удавка звільняє дерево і разом із мотузкою їде вниз.",
+    pos:A(B), a:"pulling", b:"pulling", top:"none", base:1, cars:1 },
+  { t:"Відчепити й збухтувати", who:[1,2,3,4],
+    d:"Мотузки вибрано. Зайве відчіплюють, базу розбирають, мотузки бухтують. Готово.",
+    pos:A(B), a:"gone", b:"gone", top:"none",
+    notes:[{x:206, y:470, t:"дві бухти", c:"onrock"}] },
+];
+
+// --- static world
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+function tree(g, x, base, h, r){
+  el("path", {d:`M${x} ${base} L${x} ${base - h}`, stroke:"var(--trunk)", "stroke-width": Math.max(3, h / 12), "stroke-linecap":"round"}, g);
+  el("circle", {cx:x, cy:base - h, r, fill:"var(--leaf)"}, g);
+  el("circle", {cx:x - r * .55, cy:base - h + r * .45, r:r * .7, fill:"var(--leaf2)"}, g);
+  el("circle", {cx:x + r * .55, cy:base - h + r * .35, r:r * .65, fill:"var(--leaf2)"}, g);
+}
+const trees = document.getElementById("trees");
+tree(trees, 660, 110, 70, 24);
+tree(trees, 960, 110, 56, 20);
+tree(trees, 115, 430, 62, 22);
+[395, 560].forEach(x => tree(trees, x, gy(x), 18, 8));
+
+// people
+const people = document.getElementById("people"), lanG = document.getElementById("lanyards");
+const personEls = {};
+const STAND = `<path d="M-5 0 L0 -16 L5 0 M0 -16 L0 -31 M-8 -20 L0 -28 L8 -20" fill="none" stroke="var(--body)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="-4" y="-20" width="8" height="4" rx="1" fill="COLOR"/>
+  <circle cy="-37" r="5.5" fill="var(--skin)"/><path d="M-6 -37 A6 6 0 0 1 6 -37Z" fill="COLOR"/>`;
+const CLIMB = `<path d="M0 0 L4 -15 L10 -8 M4 -15 L11 -29 M11 -27 L19 -34 M10 -26 L17 -21" fill="none" stroke="var(--body)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1" y="-18" width="8" height="4" rx="1" fill="COLOR" transform="rotate(-60 5 -16)"/>
+  <circle cx="14" cy="-35" r="5.5" fill="var(--skin)"/><path d="M8 -35 A6 6 0 0 1 20 -35Z" fill="COLOR" transform="rotate(25 14 -35)"/>`;
+const HANG = `<path d="M0 0 L-11 5 L-19 13 M0 0 L-9 9 L-14 18 M0 0 L4 -16 M4 -13 L9 -19 L10 -14 M3 -12 L-3 -5 L-1 4" fill="none" stroke="var(--body)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="-4" y="-2" width="8" height="4" rx="1" fill="COLOR"/>
+  <circle cx="6" cy="-23" r="5.5" fill="var(--skin)"/><path d="M0 -23 A6 6 0 0 1 12 -23Z" fill="COLOR" transform="rotate(15 6 -23)"/>`;
+for (const id in ROLES){
+  const c = ROLES[id].color;
+  const g = el("g", {class:"person"}, people);
+  g.innerHTML = `<ellipse class="halo" rx="24" ry="7"/>
+    <g transform="scale(${K})"><g class="pose stand">${STAND.replaceAll("COLOR", c)}</g>
+    <g class="pose climb">${CLIMB.replaceAll("COLOR", c)}</g>
+    <g class="pose hang">${HANG.replaceAll("COLOR", c)}</g></g>
+    <g class="badge" transform="translate(0,-70)"><circle r="9" fill="${c}"/><text text-anchor="middle" dy="4" font-size="11" font-weight="700" fill="#fff" font-family="Golos Text,sans-serif">${id}</text></g>`;
+  personEls[id] = {g, stand:g.querySelector(".stand"), climb:g.querySelector(".climb"), hang:g.querySelector(".hang"),
+    badge:g.querySelector(".badge"), lan:el("path", {class:"lan"}, lanG)};
+}
+
+const toD = pts => "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L");
+const setD = (e, d) => { e.setAttribute("d", d); e.style.d = `path("${d}")`; };
+const place = (e, [x, y], on) => { e.style.transform = `translate(${x}px, ${y}px)`; e.style.opacity = on ? 1 : 0; };
+
+// --- UI
+let cur = 0;
+try { const v = +localStorage.getItem("kosyi-dulfer-step"); if (v >= 0 && v < STEPS.length) cur = v; } catch (e) {}
+const $ = id => document.getElementById(id);
+const rail = $("rail");
+STEPS.forEach((s, i) => {
+  const btn = document.createElement("button");
+  btn.textContent = i + 1; btn.title = s.t;
+  btn.onclick = () => go(i);
+  rail.appendChild(btn);
+});
+$("legendPeople").innerHTML = Object.entries(ROLES).map(([id, r]) =>
+  `<li><span class="dot" style="background:${r.color}">${id}</span>${r.name}</li>`).join("");
+
+function bubble(parent, x, y, t){
+  const w = t.length * 8 + 22, bx = Math.min(Math.max(x - w / 2, 6), 994 - w);
+  const g = el("g", {class:"bubble"}, parent);
+  el("path", {d:`M${x - 6} ${y - 2} L${x} ${y + 8} L${x + 6} ${y - 2}Z`}, g);
+  el("rect", {x:bx, y:y - 28, width:w, height:27, rx:8}, g);
+  el("path", {d:`M${x - 5} ${y - 2.5} L${x + 5} ${y - 2.5}`, style:"stroke:var(--bubble);stroke-width:3"}, g);
+  const tx = el("text", {x:bx + w / 2, y:y - 9.5, "text-anchor":"middle"}, g);
+  tx.textContent = "«" + t + "»";
+}
+
+function render(){
+  const s = STEPS[cur];
+  const ap = ropeA(s), bp = ropeB(s);
+  setD($("rope"), toD(ap));
+  setD($("pull"), toD(bp));
+  place($("knot"), ap[N - 1], s.knot);
+  place($("coilA"), s.a === "coil" ? COIL.aTop : COIL.aBot, s.a === "coil" || s.a === "gone");
+  place($("coilB"), ["pulling", "gone"].includes(s.b) ? COIL.bBot : COIL.bTop, ["coil", "pulling", "gone"].includes(s.b));
+  place($("noose"), s.a === "pulling" ? nooseAt(s.noose) : s.a === "gone" ? [182, 422] : TOPA, s.top === "noose" || s.a === "pulling" || s.a === "gone");
+  if (s.dev) place($("device"), harness(s.pos[s.dev]), true); else $("device").style.opacity = 0;
+  $("topFixed").style.opacity = s.top === "fixed" ? 1 : 0;
+  $("wrap").style.opacity = s.top === "noose" ? 1 : 0;
+  $("botBase").style.opacity = s.base ? 1 : 0;
+  $("cars").style.opacity = s.cars ? 1 : 0;
+  $("garda").style.opacity = s.garda ? 1 : 0;
+  $("shtyky").style.opacity = s.shtyky ? 1 : 0;
+
+  for (const id in personEls){
+    const p = s.pos[id], e = personEls[id];
+    e.g.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    e.stand.style.opacity = p.m === "s" ? 1 : 0;
+    e.climb.style.opacity = p.m === "c" ? 1 : 0;
+    e.hang.style.opacity = p.m === "h" ? 1 : 0;
+    e.badge.setAttribute("transform", p.m === "h" ? "translate(0,-50)" : "translate(0,-70)");
+    e.g.classList.toggle("active", s.who.includes(+id));
+    const h = harness(p), on = s.sb && s.sb[id];
+    setD(e.lan, toD([h, on ? [p.x + 3, lineY(p.x + 3)] : h]));
+    e.lan.style.opacity = on ? 1 : 0;
+  }
+
+  const notes = $("notes"); notes.innerHTML = "";
+  (s.notes || []).forEach(n => {
+    const t = el("text", {x:n.x, y:n.y, "text-anchor":n.a || "middle", class:"lbl" + (n.c ? " " + n.c : "")}, notes);
+    t.textContent = n.t;
+  });
+  for (const id in (s.say || {})){
+    const p = s.pos[id];
+    bubble(notes, p.x + (p.m === "c" ? 8 : 0), p.y - (p.m === "h" ? 64 : 84), s.say[id]);
+  }
+
+  $("num").textContent = `Крок ${cur + 1}`;
+  $("title").textContent = s.t;
+  $("desc").textContent = s.d;
+  $("who").innerHTML = s.who.map(id => `<span class="chip"><i style="background:${ROLES[id].color}">${id}</i>${ROLES[id].short}</span>`).join(" ");
+  const says = Object.entries(s.say || {});
+  $("cmdRow").hidden = !says.length;
+  $("cmd").innerHTML = says.map(([id, t]) => `<span class="cmd">${ROLES[id].short}: «${t}»</span>`).join(" ");
+  $("safety").hidden = !s.safety;
+  $("safetyText").textContent = s.safety || "";
+
+  $("counter").textContent = `Крок ${cur + 1} з ${STEPS.length}`;
+  $("prev").disabled = cur === 0;
+  $("next").textContent = cur === STEPS.length - 1 ? "Спочатку ↺" : "Далі →";
+  [...rail.children].forEach((b, i) => {
+    b.classList.toggle("done", i < cur);
+    if (i === cur) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+  });
+  try { localStorage.setItem("kosyi-dulfer-step", cur); } catch (e) {}
+}
+function go(i){ cur = Math.max(0, Math.min(STEPS.length - 1, i)); render(); }
+$("prev").onclick = () => go(cur - 1);
+$("next").onclick = () => go(cur === STEPS.length - 1 ? 0 : cur + 1);
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") go(cur + 1);
+  else if (e.key === "ArrowLeft") go(cur - 1);
+  else if (e.key === "Home") go(0);
+  else if (e.key === "End") go(STEPS.length - 1);
+});
+render();
+</script>
+</body>
+</html>
